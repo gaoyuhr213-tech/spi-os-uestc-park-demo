@@ -54,7 +54,7 @@ FROM (
     'synthetic' AS nature,
     MOD(n, 2) AS cross,
     'tenant' AS tierRole,
-    ELT(1 + MOD(n - 1, 4), '楂?, '涓?, '浣?, '鏃?) AS hiringBase,
+    ELT(1 + MOD(n - 1, 4), '高', '中', '低', '无') AS hiringBase,
     'Non-customer production-like migration fixture' AS note,
     ELT(1 + MOD(n - 1, 4), 'A', 'B', 'C', 'D') AS referralPath,
     'fixture' AS entryPoint,
@@ -75,7 +75,7 @@ FROM (
     'synthetic' AS nature,
     MOD(n + 1, 2) AS cross,
     'tenant' AS tierRole,
-    ELT(1 + MOD(n, 4), '楂?, '涓?, '浣?, '鏃?) AS hiringBase,
+    ELT(1 + MOD(n, 4), '高', '中', '低', '无') AS hiringBase,
     'Non-customer production-like migration fixture' AS note,
     ELT(1 + MOD(n, 4), 'A', 'B', 'C', 'D') AS referralPath,
     'fixture' AS entryPoint,
@@ -94,13 +94,13 @@ ON DUPLICATE KEY UPDATE
 
 INSERT INTO enrichments
   (tenantId, eid, uscc, regCapital, founded, insured, jobs, topJobs, patents, softCopyrights, hiTech, funding, referralVia, referralNote, verified, verifiedBy, remark)
-SELECT tenantId, eid, CONCAT('SYNUSCC-', eid), '1000涓?, '2021', 10 + MOD(CAST(RIGHT(eid, 2) AS UNSIGNED), 90), 1 + MOD(CAST(RIGHT(eid, 2) AS UNSIGNED), 15),
+SELECT tenantId, eid, CONCAT('SYNUSCC-', eid), '1000万', '2021', 10 + MOD(CAST(RIGHT(eid, 2) AS UNSIGNED), 90), 1 + MOD(CAST(RIGHT(eid, 2) AS UNSIGNED), 15),
        'Synthetic Platform Engineer', MOD(CAST(RIGHT(eid, 2) AS UNSIGNED), 8), MOD(CAST(RIGHT(eid, 2) AS UNSIGNED), 5),
-       '鏄?, 'Synthetic Seed', 'Synthetic Ecosystem', 'Non-customer fixture', '宸叉牳楠?, @fixture_actor, @fixture_run_id
+       '是', 'Synthetic Seed', 'Synthetic Ecosystem', 'Non-customer fixture', '已核验', @fixture_actor, @fixture_run_id
 FROM entities WHERE tenantId IN (@tenant_a, @tenant_b) AND testRunId = @fixture_run_id;
 
 INSERT INTO lifecycleEvents (tenantId, eid, stage, note, actor)
-SELECT tenantId, eid, ELT(1 + MOD(CAST(RIGHT(eid, 1) AS UNSIGNED), 4), '鏈Е杈?, '宸茶Е杈?, '宸茬害瑙?, '宸叉垚浜?), 'Synthetic lifecycle event', @fixture_actor
+SELECT tenantId, eid, ELT(1 + MOD(CAST(RIGHT(eid, 1) AS UNSIGNED), 4), '未触达', '已触达', '已约见', '已成交'), 'Synthetic lifecycle event', @fixture_actor
 FROM entities WHERE tenantId IN (@tenant_a, @tenant_b) AND testRunId = @fixture_run_id;
 
 INSERT INTO ruleConfigs (tenantId, `key`, version, configJson, description)
@@ -155,15 +155,90 @@ INSERT INTO entityAliases (tenantId, eid, aliasType, aliasValue, normalizedValue
 SELECT tenantId, eid, 'legal_name', name, LOWER(REPLACE(name, ' ', '')), 1
 FROM entities WHERE tenantId IN (@tenant_a, @tenant_b) AND testRunId = @fixture_run_id;
 
-INSERT INTO sourceFieldPolicie…41031 tokens truncated…denceLinks", "industryRuleTodos", "scoreModels", "ruleConfigs")
-$temporaryPath = Join-Path ([System.IO.Path]::GetTempPath()) ("spios-business-fingerprint-" + [guid]::NewGuid().ToString("N") + ".sql")
-$previousPassword = $env:MYSQL_PWD
-$env:MYSQL_PWD = $connection.Password
-try {
-    & mysqldump --protocol=TCP "--host=$($connection.Host)" "--port=$($connection.Port)" "--user=$($connection.User)" --no-create-info --skip-triggers --no-tablespaces --skip-comments --skip-dump-date --skip-set-charset --compact $connection.Database @tables | Set-Content -LiteralPath $temporaryPath -Encoding utf8
-    if ($LASTEXITCODE -ne 0) { throw "FAIL: business fingerprint dump failed" }
-    Write-Output (Get-Sha256 $temporaryPath)
-} finally {
-    $env:MYSQL_PWD = $previousPassword
-    if (Test-Path -LiteralPath $temporaryPath) { Remove-Item -LiteralPath $temporaryPath -Force }
-}
+INSERT INTO sourceFieldPolicies (tenantId, fieldName, sourceCategory, priority, maxAgeDays, requiresVerification, allowAutoApply, notes)
+VALUES
+  (@tenant_a, 'industry', 'other', 80, 365, 1, 0, 'Synthetic fixture policy'),
+  (@tenant_b, 'industry', 'other', 80, 365, 1, 0, 'Synthetic fixture policy');
+
+INSERT INTO industryRuleTodos
+  (tenantId, todoKey, rawIndustry, fallbackScore, entityCount, sampleEidsJson, firstBatchId, lastBatchId, status, ruleVersion, resolutionNote)
+VALUES
+  (@tenant_a, 'rehearsal-a:synthetic-unmapped', 'synthetic-unmapped', 25, 1, '["RHA001"]', (SELECT id FROM ingestionBatches WHERE batchKey='rehearsal-a-batch'), (SELECT id FROM ingestionBatches WHERE batchKey='rehearsal-a-batch'), 'open', 'fixture-v2', 'Synthetic governance todo'),
+  (@tenant_b, 'rehearsal-b:synthetic-unmapped', 'synthetic-unmapped', 25, 1, '["RHB001"]', (SELECT id FROM ingestionBatches WHERE batchKey='rehearsal-b-batch'), (SELECT id FROM ingestionBatches WHERE batchKey='rehearsal-b-batch'), 'open', 'fixture-v2', 'Synthetic governance todo');
+
+INSERT INTO scoreModels (tenantId, modelKey, role, weightsJson, backtestJson, lineageJson, explanation)
+VALUES
+  (@tenant_a, 'rehearsal-a-champion', 'champion', '{"demand":50,"pipeMatch":50}', '{"sample":35}', '{"fixture":"migration-rehearsal-prodlike-v2"}', 'Synthetic model'),
+  (@tenant_b, 'rehearsal-b-champion', 'champion', '{"demand":50,"pipeMatch":50}', '{"sample":34}', '{"fixture":"migration-rehearsal-prodlike-v2"}', 'Synthetic model');
+
+INSERT INTO decisions
+  (tenantId, eid, dtype, title, reason, stars, needTag, matchedResources, status, assignee, outcome, outcomeNote, dealAmount, revenueTier, basedOn, genKey)
+VALUES
+  (@tenant_a, 'RHA001', 'contact', 'Synthetic contact decision A', 'Synthetic evidence trigger', 4, 'talent', '["Synthetic Mentor A"]', 'suggested', @fixture_actor, NULL, NULL, NULL, NULL, '{"fixture":"migration-rehearsal-prodlike-v2"}', 'rehearsal-a:RHA001:contact'),
+  (@tenant_b, 'RHB001', 'policy', 'Synthetic policy decision B', 'Synthetic evidence trigger', 4, 'policy', '["Synthetic Mentor B"]', 'suggested', @fixture_actor, NULL, NULL, NULL, NULL, '{"fixture":"migration-rehearsal-prodlike-v2"}', 'rehearsal-b:RHB001:policy');
+
+INSERT INTO decisionEvidenceLinks (decisionId, evidenceId, role)
+VALUES
+  ((SELECT id FROM decisions WHERE genKey = 'rehearsal-a:RHA001:contact'), (SELECT id FROM evidenceRecords WHERE evidenceKey = 'evidence-RHA001'), 'trigger'),
+  ((SELECT id FROM decisions WHERE genKey = 'rehearsal-b:RHB001:policy'), (SELECT id FROM evidenceRecords WHERE evidenceKey = 'evidence-RHB001'), 'support');
+
+INSERT INTO workflowDefs (tenantId, defKey, name, decisionType, stepsJson, active, version)
+VALUES
+  (@tenant_a, 'rehearsal-a-contact-v1', 'Synthetic Contact Workflow A', 'contact', '[{"kind":"human","title":"Synthetic outreach","slaHours":24}]', 1, 1),
+  (@tenant_b, 'rehearsal-b-policy-v1', 'Synthetic Policy Workflow B', 'policy', '[{"kind":"human","title":"Synthetic policy review","slaHours":24}]', 1, 1);
+
+INSERT INTO workflowInstances (tenantId, defKey, decisionId, eid, status, currentStep, stepStatesJson, startedBy)
+VALUES
+  (@tenant_a, 'rehearsal-a-contact-v1', (SELECT id FROM decisions WHERE genKey = 'rehearsal-a:RHA001:contact'), 'RHA001', 'running', 0, '[{"step":0,"status":"open"}]', @fixture_actor),
+  (@tenant_b, 'rehearsal-b-policy-v1', (SELECT id FROM decisions WHERE genKey = 'rehearsal-b:RHB001:policy'), 'RHB001', 'running', 0, '[{"step":0,"status":"open"}]', @fixture_actor);
+
+INSERT INTO workflowTasks (tenantId, instanceId, stepIndex, title, assignee, status, slaHours, dueAt)
+VALUES
+  (@tenant_a, (SELECT id FROM workflowInstances WHERE defKey='rehearsal-a-contact-v1'), 0, 'Synthetic outreach task', @fixture_actor, 'open', 24, DATE_ADD(NOW(), INTERVAL 1 DAY)),
+  (@tenant_b, (SELECT id FROM workflowInstances WHERE defKey='rehearsal-b-policy-v1'), 0, 'Synthetic policy task', @fixture_actor, 'open', 24, DATE_ADD(NOW(), INTERVAL 1 DAY));
+
+INSERT INTO graphNodes (tenantId, nodeKey, kind, label, attrsJson)
+VALUES
+  (@tenant_a, 'rha:hub', 'platform', 'Synthetic Hub A', '{"fixture":true}'),
+  (@tenant_a, 'rha:RHA001', 'company', 'Synthetic Shared Enterprise', '{"fixture":true}'),
+  (@tenant_a, 'rha:mentor', 'person', 'Synthetic Mentor A', '{"fixture":true}'),
+  (@tenant_b, 'rhb:hub', 'platform', 'Synthetic Hub B', '{"fixture":true}'),
+  (@tenant_b, 'rhb:RHB001', 'company', 'Synthetic Shared Enterprise', '{"fixture":true}'),
+  (@tenant_b, 'rhb:mentor', 'person', 'Synthetic Mentor B', '{"fixture":true}');
+
+INSERT INTO graphEdges (tenantId, fromKey, toKey, relType, strength, evidence, pathTag)
+VALUES
+  (@tenant_a, 'rha:hub', 'rha:mentor', 'partner', 80, 'Synthetic evidence', 'A'),
+  (@tenant_a, 'rha:mentor', 'rha:RHA001', 'referral', 75, 'Synthetic evidence', 'A'),
+  (@tenant_b, 'rhb:hub', 'rhb:mentor', 'partner', 80, 'Synthetic evidence', 'B'),
+  (@tenant_b, 'rhb:mentor', 'rhb:RHB001', 'referral', 75, 'Synthetic evidence', 'B');
+
+INSERT INTO consents (tenantId, eid, scope, status, grantedBy, basis)
+VALUES
+  (@tenant_a, 'RHA001', 'full_profile', 'granted', @fixture_actor, 'Synthetic test consent'),
+  (@tenant_b, 'RHB001', 'full_profile', 'granted', @fixture_actor, 'Synthetic test consent');
+
+INSERT INTO accessPolicies (tenantId, role, fieldGroup, effect, condition, updatedBy)
+VALUES
+  (@tenant_a, 'admin', 'business', 'allow', 'fixture_only', @fixture_actor),
+  (@tenant_b, 'admin', 'business', 'allow', 'fixture_only', @fixture_actor);
+
+INSERT INTO mergeDecisions (tenantId, sourceEids, targetEid, confidence, evidenceJson, status, decidedBy, decidedAt)
+VALUES
+  (@tenant_a, '["RHA001"]', 'RHA001', 100, '{"fixture":true}', 'confirmed', @fixture_actor, NOW()),
+  (@tenant_b, '["RHB001"]', 'RHB001', 100, '{"fixture":true}', 'confirmed', @fixture_actor, NOW());
+
+INSERT INTO parseHistory (tenantId, eid, sourceType, rawText, resultJson, fieldsWritten, confidence, actor)
+VALUES
+  (@tenant_a, 'RHA001', 'excel_import', '{"synthetic":true}', '{"industry":"software"}', 'industry', 'high', @fixture_actor),
+  (@tenant_b, 'RHB001', 'excel_import', '{"synthetic":true}', '{"industry":"ai"}', 'industry', 'high', @fixture_actor);
+
+INSERT INTO taskCompletions (tenantId, eid, taskType, weekKey, note, actor)
+VALUES
+  (@tenant_a, 'RHA001', '首触', '2026-W01', 'Synthetic completion', @fixture_actor),
+  (@tenant_b, 'RHB001', '培育跟进', '2026-W01', 'Synthetic completion', @fixture_actor);
+
+INSERT INTO opsLedger (tenantId, action, targetEid, detail, actor, beforeJson, afterJson)
+SELECT tenantId, 'seed', eid, 'Synthetic production-like rehearsal fixture', @fixture_actor, NULL,
+       JSON_OBJECT('fixture', @fixture_run_id, 'environment', 'test')
+FROM entities WHERE tenantId IN (@tenant_a, @tenant_b) AND testRunId = @fixture_run_id;
