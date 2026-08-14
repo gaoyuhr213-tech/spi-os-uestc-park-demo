@@ -1,0 +1,87 @@
+name: Migration Rehearsal SPI-OS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: migration-rehearsal
+  cancel-in-progress: false
+
+jobs:
+  rehearsal-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root-rehearsal-only
+          MYSQL_ROOT_HOST: "%"
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot-rehearsal-only"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    env:
+      REHEARSAL_ENV: "1"
+      DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_clean
+      REHEARSAL_DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_clean
+      REHEARSAL_UPGRADE_DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_upgrade
+      REHEARSAL_RESTORE_DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_restore
+      REHEARSAL_LOCK_DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_lock
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install MySQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mysql-client
+
+      - name: Provision isolated rehearsal databases
+        env:
+          MYSQL_PWD: root-rehearsal-only
+        run: |
+          mysql --protocol=TCP -h 127.0.0.1 -uroot <<'SQL'
+          CREATE DATABASE spios_rehearsal_clean CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE DATABASE spios_rehearsal_upgrade CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE DATABASE spios_rehearsal_restore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE DATABASE spios_rehearsal_lock CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE USER 'rehearsal'@'%' IDENTIFIED BY 'rehearsal-only';
+          GRANT ALL PRIVILEGES ON spios_rehearsal_clean.* TO 'rehearsal'@'%';
+          GRANT ALL PRIVILEGES ON spios_rehearsal_upgrade.* TO 'rehearsal'@'%';
+          GRANT ALL PRIVILEGES ON spios_rehearsal_restore.* TO 'rehearsal'@'%';
+          GRANT ALL PRIVILEGES ON spios_rehearsal_lock.* TO 'rehearsal'@'%';
+          FLUSH PRIVILEGES;
+          SQL
+
+      - name: Run fail-closed migration harness
+        shell: pwsh
+        run: ./scripts/rehearsal/run.ps1
+
+      - name: Upload rehearsal evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: migration-rehearsal-${{ github.sha }}
+          path: artifacts/rehearsal/
+          if-no-files-found: error
+          retention-days: 30
