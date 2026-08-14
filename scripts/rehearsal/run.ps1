@@ -44,6 +44,7 @@ Invoke-Scenario "guard" {
 }
 
 Invoke-Scenario "preflight" { & "$PSScriptRoot/preflight.ps1" -DatabaseUrl $env:REHEARSAL_DATABASE_URL }
+Invoke-Scenario "line-ending-normalization" { & "$PSScriptRoot/hash-normalization.ps1" -ArtifactPath (Join-Path $artifactRoot "line-ending-normalization.json") }
 Invoke-Scenario "canonical-baseline-source" { & "$PSScriptRoot/canonical-baseline.ps1" -ArtifactPath (Join-Path $artifactRoot "canonical-baseline-source.json") }
 
 Invoke-Scenario "clean-install" {

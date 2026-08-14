@@ -53,8 +53,22 @@ export function validateRehearsalContract() {
   if (fixture.includes("production' AS dataEnvironment")) errors.push("fixture attempts to write production dataEnvironment");
 
   const runner = read(runnerPath);
-  for (const scenario of ["canonical-baseline-source", "canonical-baseline-runtime", "application-readiness"]) {
+  const commonPath = join(root, "scripts", "rehearsal", "common.ps1");
+  const lineEndingPath = join(root, "scripts", "rehearsal", "hash-normalization.ps1");
+  for (const scenario of ["line-ending-normalization", "canonical-baseline-source", "canonical-baseline-runtime", "application-readiness"]) {
     if (!runner.includes(scenario)) errors.push(`runner missing scenario: ${scenario}`);
+  }
+  if (!existsSync(commonPath) || !existsSync(lineEndingPath)) {
+    errors.push("cross-platform line ending rehearsal assets are missing");
+  } else {
+    const common = read(commonPath);
+    const lineEnding = read(lineEndingPath);
+    for (const token of ["ReadAllBytes", "0x0D", "0x0A", "SHA256"]) {
+      if (!common.includes(token)) errors.push(`PowerShell canonical hash normalization missing: ${token}`);
+    }
+    for (const token of ["中文字段", "LF and CRLF canonical hashes differ", "bytePreserving"]) {
+      if (!lineEnding.includes(token)) errors.push(`line ending rehearsal assertion missing: ${token}`);
+    }
   }
   const smoke = read(smokePath);
   for (const assertion of ["NODE_ENV = \"production\"", "DATABASE_URL = $DatabaseUrl", "observability.health", "decisionEngineReady"]) {

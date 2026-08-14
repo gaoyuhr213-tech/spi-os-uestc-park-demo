@@ -52,7 +52,29 @@ function Invoke-RehearsalMysql {
 
 function Get-Sha256 {
     param([Parameter(Mandatory = $true)][string]$Path)
-    return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant()
+    # Canonical Baseline is content-addressed, not platform-line-ending-addressed.
+    # Normalize only CRLF byte pairs to LF without decoding text, preserving UTF-8
+    # and all non-line-ending bytes exactly across Windows and Linux runners.
+    $bytes = [System.IO.File]::ReadAllBytes((Resolve-Path -LiteralPath $Path))
+    $normalized = [System.IO.MemoryStream]::new()
+    try {
+        for ($i = 0; $i -lt $bytes.Length; $i++) {
+            if ($bytes[$i] -eq 0x0D -and ($i + 1) -lt $bytes.Length -and $bytes[$i + 1] -eq 0x0A) {
+                $normalized.WriteByte(0x0A)
+                $i++
+            } else {
+                $normalized.WriteByte($bytes[$i])
+            }
+        }
+        $sha256 = [System.Security.Cryptography.SHA256]::Create()
+        try {
+            return [Convert]::ToHexString($sha256.ComputeHash($normalized.ToArray())).ToLowerInvariant()
+        } finally {
+            $sha256.Dispose()
+        }
+    } finally {
+        $normalized.Dispose()
+    }
 }
 
 function Write-RehearsalArtifact {
