@@ -19,14 +19,15 @@ function Invoke-Scenario {
         Write-Error "$status $Name`: $message" -ErrorAction Continue
     }
     $results.Add($result)
-    Write-RehearsalArtifact -Path (Join-Path $artifactRoot "$Name.json") -Value $result
+    Write-RehearsalArtifact -Path (Join-Path $artifactRoot "$Name-scenario.json") -Value $result
 }
 
 $urls = @(
     $env:REHEARSAL_DATABASE_URL,
     $env:REHEARSAL_UPGRADE_DATABASE_URL,
     $env:REHEARSAL_RESTORE_DATABASE_URL,
-    $env:REHEARSAL_LOCK_DATABASE_URL
+    $env:REHEARSAL_LOCK_DATABASE_URL,
+    $env:REHEARSAL_FAILURE_DATABASE_URL
 )
 
 Invoke-Scenario "guard" {
@@ -83,7 +84,13 @@ Invoke-Scenario "idempotency" {
     "schema=$after"
 }
 
-Invoke-Scenario "lock" { & "$PSScriptRoot/lock.ps1" -DatabaseUrl $env:REHEARSAL_LOCK_DATABASE_URL }
+Invoke-Scenario "lock" {
+    & "$PSScriptRoot/lock.ps1" -DatabaseUrl $env:REHEARSAL_LOCK_DATABASE_URL -ArtifactPath (Join-Path $artifactRoot "lock.json")
+}
+
+Invoke-Scenario "failure-injection" {
+    & "$PSScriptRoot/failure-injection.ps1" -DatabaseUrl $env:REHEARSAL_FAILURE_DATABASE_URL -ArtifactPath (Join-Path $artifactRoot "failure-injection.json")
+}
 
 $summary = [pscustomobject]@{
     version = 1

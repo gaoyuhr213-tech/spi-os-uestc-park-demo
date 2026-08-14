@@ -1,15 +1,19 @@
 param(
     [Parameter(Mandatory = $true)][string]$DatabaseUrl,
     [int]$StartAt = 0,
-    [int]$Count = 0
+    [int]$Count = 0,
+    [string]$MigrationRoot = ""
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 . "$PSScriptRoot/common.ps1"
 
-$migrationRoot = Resolve-Path (Join-Path $PSScriptRoot "../../drizzle")
-$files = @(Get-ChildItem -LiteralPath $migrationRoot -File -Filter "*.sql" | Sort-Object Name)
+if ([string]::IsNullOrWhiteSpace($MigrationRoot)) {
+    $MigrationRoot = Join-Path $PSScriptRoot "../../drizzle"
+}
+$resolvedMigrationRoot = Resolve-Path -LiteralPath $MigrationRoot
+$files = @(Get-ChildItem -LiteralPath $resolvedMigrationRoot -File -Filter "*.sql" | Sort-Object Name)
 if ($files.Count -eq 0) { throw "BLOCKED: no drizzle SQL migrations found" }
 if ($StartAt -lt 0 -or $StartAt -gt $files.Count) { throw "Invalid StartAt" }
 $selected = @($files | Select-Object -Skip $StartAt)

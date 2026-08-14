@@ -35,6 +35,7 @@ jobs:
       REHEARSAL_UPGRADE_DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_upgrade
       REHEARSAL_RESTORE_DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_restore
       REHEARSAL_LOCK_DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_lock
+      REHEARSAL_FAILURE_DATABASE_URL: mysql://rehearsal:rehearsal-only@127.0.0.1:3306/spios_rehearsal_failure
 
     steps:
       - name: Checkout source
@@ -65,11 +66,13 @@ jobs:
           CREATE DATABASE spios_rehearsal_upgrade CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
           CREATE DATABASE spios_rehearsal_restore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
           CREATE DATABASE spios_rehearsal_lock CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+          CREATE DATABASE spios_rehearsal_failure CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
           CREATE USER 'rehearsal'@'%' IDENTIFIED BY 'rehearsal-only';
           GRANT ALL PRIVILEGES ON spios_rehearsal_clean.* TO 'rehearsal'@'%';
           GRANT ALL PRIVILEGES ON spios_rehearsal_upgrade.* TO 'rehearsal'@'%';
           GRANT ALL PRIVILEGES ON spios_rehearsal_restore.* TO 'rehearsal'@'%';
           GRANT ALL PRIVILEGES ON spios_rehearsal_lock.* TO 'rehearsal'@'%';
+          GRANT ALL PRIVILEGES ON spios_rehearsal_failure.* TO 'rehearsal'@'%';
           FLUSH PRIVILEGES;
           SQL
 
