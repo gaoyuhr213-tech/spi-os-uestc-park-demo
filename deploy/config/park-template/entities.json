@@ -1,0 +1,5 @@
+[
+  { "eid": "DEMO-001", "name": "示例科技有限公司", "floor": "5F", "room": "501", "ind": "软件", "nature": "有限责任", "hiringBase": "中" },
+  { "eid": "DEMO-002", "name": "示例智能制造有限公司", "floor": "8F", "room": "801", "ind": "制造", "nature": "有限责任", "hiringBase": "高" },
+  { "eid": "DEMO-003", "name": "示例生物科技有限公司", "floor": "3F", "room": "302", "ind": "生物医药", "nature": "有限责任", "hiringBase": "低" }
+]

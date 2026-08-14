@@ -1,0 +1,64 @@
+# 迭代25 · 工单14 · 一条命令拉起全栈：docker compose -f deploy/docker-compose.yml --env-file deploy/config/park.env up -d
+# 组件：SPI-OS 应用 + OceanBase CE（国产分布式数据库，MySQL 兼容租户模式）
+# 单租户物理隔离形态：每个园区一套 compose 栈（独立卷/独立网络/独立 env），互不交叉。
+services:
+  db:
+    image: oceanbase/oceanbase-ce:4.2.1
+    container_name: ${PARK_ID:-uestc}-oceanbase
+    environment:
+      MODE: mini                       # 单机最小资源模式（私有化 POC / 中小园区）
+      OB_TENANT_NAME: ${DB_TENANT:-spi_os}
+      OB_SYS_PASSWORD: ${DB_ROOT_PASSWORD:?必须在 env 中提供}
+      OB_TENANT_PASSWORD: ${DB_PASSWORD:?必须在 env 中提供}
+    volumes:
+      - ob-data:/root/ob               # 数据卷独立（园区隔离）
+    ports:
+      - "${DB_PORT:-2881}:2881"        # MySQL 兼容协议端口
+    healthcheck:
+      test: ["CMD-SHELL", "obclient -h127.0.0.1 -P2881 -uroot@${DB_TENANT:-spi_os} -p${DB_PASSWORD} -e 'SELECT 1' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 40                      # OceanBase 首次初始化较慢（约 5-8 分钟）
+      start_period: 300s
+    networks: [spi-net]
+
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: spi-os:${APP_VERSION:-latest}
+    container_name: ${PARK_ID:-uestc}-spi-os
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: ${APP_PORT:-3000}
+      DB_HOST: db
+      DB_PORT: 2881
+      # OceanBase MySQL 租户连接串：user@tenant 形态；驱动仍为 mysql2（协议兼容）
+      DATABASE_URL: mysql://${DB_USER:-root}@${DB_TENANT:-spi_os}:${DB_PASSWORD}@db:2881/${DB_NAME:-spi_os}
+      JWT_SECRET: ${JWT_SECRET:?必须在 env 中提供}
+      VITE_APP_ID: ${APP_ID:-spi-os-private}
+      OAUTH_SERVER_URL: ${OAUTH_SERVER_URL:-}
+      VITE_OAUTH_PORTAL_URL: ${OAUTH_PORTAL_URL:-}
+      OWNER_OPEN_ID: ${OWNER_OPEN_ID:-}
+      OWNER_NAME: ${OWNER_NAME:-}
+      # 外源连接器（可选；缺省自动降级手工回填）
+      QCC_API_KEY: ${QCC_API_KEY:-}
+      QCC_SECRET_KEY: ${QCC_SECRET_KEY:-}
+      JOB_BOARD_API_KEY: ${JOB_BOARD_API_KEY:-}
+      # 园区配置包（切换园区零代码：换 env 文件即可）
+      PARK_ID: ${PARK_ID:-uestc}
+      PARK_NAME: ${PARK_NAME:-电子科大国家大学科技园}
+    ports:
+      - "${APP_PORT:-3000}:${APP_PORT:-3000}"
+    networks: [spi-net]
+    restart: unless-stopped
+
+volumes:
+  ob-data:
+
+networks:
+  spi-net:
+    driver: bridge

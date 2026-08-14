@@ -1,0 +1,76 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1785392674674,
+      "tag": "0000_overconfident_swarm",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1785397235849,
+      "tag": "0001_true_lockjaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1785400056890,
+      "tag": "0002_futuristic_edwin_jarvis",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1785408568124,
+      "tag": "0003_tidy_doorman",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1785410768264,
+      "tag": "0004_shocking_omega_red",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1785461043700,
+      "tag": "0005_crazy_rumiko_fujikawa",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1785462906603,
+      "tag": "0006_normal_obadiah_stane",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1785477472091,
+      "tag": "0007_parallel_forgotten_one",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1785738167614,
+      "tag": "0008_lively_gravity",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1785741368221,
+      "tag": "0009_clammy_madripoor",
+      "breakpoints": true
+    }
+  ]
+}
