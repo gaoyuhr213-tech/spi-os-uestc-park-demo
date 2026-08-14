@@ -13,7 +13,8 @@ New-Item -ItemType Directory -Force -Path $parent | Out-Null
 $previousPassword = $env:MYSQL_PWD
 $env:MYSQL_PWD = $connection.Password
 try {
-    & mysqldump --protocol=TCP "--host=$($connection.Host)" "--port=$($connection.Port)" "--user=$($connection.User)" --single-transaction --no-create-info --skip-triggers --no-tablespaces $connection.Database entities opsLedger | Set-Content -LiteralPath $OutputFile -Encoding utf8
+    $tables = @("entities", "enrichments", "lifecycleEvents", "taskCompletions", "opsLedger", "graphNodes", "graphEdges", "parseHistory", "decisions", "resources", "connectors", "ingestionJobs", "mergeDecisions", "consents", "accessPolicies", "workflowDefs", "workflowInstances", "workflowTasks", "dataSources", "ingestionBatches", "evidenceRecords", "dataConflicts", "entityAliases", "sourceFieldPolicies", "decisionEvidenceLinks", "industryRuleTodos", "scoreModels", "ruleConfigs")
+    & mysqldump --protocol=TCP "--host=$($connection.Host)" "--port=$($connection.Port)" "--user=$($connection.User)" --single-transaction --no-create-info --skip-triggers --no-tablespaces --skip-comments --skip-dump-date --skip-set-charset --compact $connection.Database @tables | Set-Content -LiteralPath $OutputFile -Encoding utf8
     if ($LASTEXITCODE -ne 0) { throw "FAIL: mysqldump failed" }
 } finally {
     $env:MYSQL_PWD = $previousPassword

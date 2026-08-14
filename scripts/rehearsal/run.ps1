@@ -44,10 +44,12 @@ Invoke-Scenario "guard" {
 }
 
 Invoke-Scenario "preflight" { & "$PSScriptRoot/preflight.ps1" -DatabaseUrl $env:REHEARSAL_DATABASE_URL }
+Invoke-Scenario "canonical-baseline-source" { & "$PSScriptRoot/canonical-baseline.ps1" -ArtifactPath (Join-Path $artifactRoot "canonical-baseline-source.json") }
 
 Invoke-Scenario "clean-install" {
     & "$PSScriptRoot/migrate.ps1" -DatabaseUrl $env:REHEARSAL_DATABASE_URL
     & "$PSScriptRoot/fixture.ps1" -DatabaseUrl $env:REHEARSAL_DATABASE_URL
+    & "$PSScriptRoot/canonical-baseline.ps1" -DatabaseUrl $env:REHEARSAL_DATABASE_URL -ArtifactPath (Join-Path $artifactRoot "canonical-baseline-runtime.json")
     "schema=$(& "$PSScriptRoot/schema-fingerprint.ps1" -DatabaseUrl $env:REHEARSAL_DATABASE_URL)"
     "business=$(& "$PSScriptRoot/business-fingerprint.ps1" -DatabaseUrl $env:REHEARSAL_DATABASE_URL)"
 }
@@ -90,6 +92,10 @@ Invoke-Scenario "lock" {
 
 Invoke-Scenario "failure-injection" {
     & "$PSScriptRoot/failure-injection.ps1" -DatabaseUrl $env:REHEARSAL_FAILURE_DATABASE_URL -ArtifactPath (Join-Path $artifactRoot "failure-injection.json")
+}
+
+Invoke-Scenario "application-readiness" {
+    & "$PSScriptRoot/app-smoke.ps1" -DatabaseUrl $env:REHEARSAL_DATABASE_URL -ArtifactPath (Join-Path $artifactRoot "application-readiness.json")
 }
 
 $summary = [pscustomobject]@{

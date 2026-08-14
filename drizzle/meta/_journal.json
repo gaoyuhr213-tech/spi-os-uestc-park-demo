@@ -71,6 +71,13 @@
       "when": 1785741368221,
       "tag": "0009_clammy_madripoor",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1786589100882,
+      "tag": "0010_dry_tag",
+      "breakpoints": true
     }
   ]
 }

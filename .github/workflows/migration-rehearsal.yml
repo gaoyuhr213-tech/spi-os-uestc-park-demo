@@ -76,7 +76,7 @@ jobs:
           FLUSH PRIVILEGES;
           SQL
 
-      - name: Run fail-closed migration harness
+      - name: Run fail-closed migration harness with canonical baseline and application readiness
         shell: pwsh
         run: ./scripts/rehearsal/run.ps1
 

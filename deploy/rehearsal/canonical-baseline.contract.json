@@ -1,0 +1,43 @@
+{
+  "schema": "spios.rehearsal-canonical-baseline.v1",
+  "status": "CANDIDATE_PENDING_ARCHITECT_REVIEW",
+  "authority": "Manus managed workspace",
+  "evidenceRef": "workspace-authority-v3",
+  "canonicalWorkspaceCommit": "7bee2fd44d824157822a6f5c8e5d4b17fc6a1c6a",
+  "sourceManifestHash": "e48828c97f5d9f4ef47b22676bd4d3ca0223f24dee2c0c69102decaf9d2b3b85",
+  "sourceFileCount": 359,
+  "schemaSha256": "a0ccd58b928f37129f62bbb3d5788ce79b35f4d064b5b13984eeff3962e6d534",
+  "migrationJournal": [
+    { "path": "0000_overconfident_swarm.sql", "sha256": "461336075c1270360a1308b0a20bd15c2a4aedb24feb62515821993526bd6dde" },
+    { "path": "0001_true_lockjaw.sql", "sha256": "9819e8692a181e043d78b655e932023f9f485cfca9d8e7dca585bb2f6bcd5290" },
+    { "path": "0002_futuristic_edwin_jarvis.sql", "sha256": "4952542055643ec26597e42c2b13de20438966dcbe28443eee39efcd164b7207" },
+    { "path": "0003_tidy_doorman.sql", "sha256": "d0bc04e5e270d3389d68d71e7296fe7e475008b8293087b88a7866adeedb0f47" },
+    { "path": "0004_shocking_omega_red.sql", "sha256": "73e3057f4883e9cc343468a36a890a79d01d38191476439bd6b4717a7dcfc9cb" },
+    { "path": "0005_crazy_rumiko_fujikawa.sql", "sha256": "085655c0e3ef479413da88e523378b73c296f24ed5d26e109fff8657113ab51a" },
+    { "path": "0006_normal_obadiah_stane.sql", "sha256": "88f104426e534d58fd6ef1a4ea7b06469d6f766f773e8675eab44828235ab82c" },
+    { "path": "0007_parallel_forgotten_one.sql", "sha256": "f6df44c58244966a6abca1a7869ee0d8683f0f6d68204e1d2ab3cf01804ebb87" },
+    { "path": "0008_lively_gravity.sql", "sha256": "b955a8157c83e4f3da4b0c49ee283f471e70c3f4751ac8d43d04e92bef05177d" },
+    { "path": "0009_clammy_madripoor.sql", "sha256": "c6c9bdd8a539d71d8f0cc1d71481b55b38a901df1bb3768ff47b109a3c80f588" },
+    { "path": "0010_dry_tag.sql", "sha256": "522d7d04c91dfb877d804e91ee6696b55bc08e6652919c5713196bad68836bdb" }
+  ],
+  "fixtureContract": {
+    "fixtureId": "spios-production-like-synthetic-v2",
+    "testRunId": "migration-rehearsal-prodlike-v2",
+    "dataEnvironment": "test",
+    "tenantDistribution": {
+      "rehearsal-park-a": 35,
+      "rehearsal-park-b": 34
+    },
+    "requiredObjectFamilies": [
+      "entity", "enrichment", "lifecycle", "resource", "decision", "workflow",
+      "evidence", "conflict", "alias", "ingestion", "connector", "data_source",
+      "rule_config", "score_model", "governance_todo", "graph", "consent", "policy", "audit"
+    ]
+  },
+  "safety": {
+    "containsCustomerData": false,
+    "productionSecretsAllowed": false,
+    "mirrorIsNotSourceAuthority": true,
+    "historicalMigrationRewriteAllowed": false
+  }
+}

@@ -26,11 +26,11 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
 /* ============================================================
- * SPI-OS å›­åŒºæ™ºèƒ½ä½œæˆ˜å° Â· ä¸šåŠ¡è¡¨
- * - entities = ä¼ä¸šä¸»æ•°æ®ï¼ˆL0 åå½• + æ¼”ç¤ºå£å¾„ä¿¡å·/è¯„åˆ†è¦†ç›–ï¼‰
- * - enrichments = L1/L2 æƒ…æŠ¥å¯Œé›†ï¼ˆä¸€ä¼ä¸€è¡Œï¼ŒExcel è¦†ç›–å¼å¯¼å…¥ï¼‰
- * - lifecycleEvents = çº¿ç´¢ç”Ÿå‘½å‘¨æœŸäº‹ä»¶ï¼ˆè¿½åŠ å¼ï¼Œæ¼æ–—ç”±äº‹ä»¶æµèšåˆï¼‰
- * - ruleConfigs = ä¸šåŠ¡è§„åˆ™é…ç½®ï¼ˆè¯„åˆ†æƒé‡/åˆ†çº§é˜ˆå€¼/è¯æœ¯æ¨¡æ¿ï¼Œä»…åŽç«¯æŒæœ‰ï¼‰
+ * SPI-OS é¥î…žå°¯é…é¸¿å…˜æµ£æ»„åž¬é™?è·¯ æ¶“æ°¬å§Ÿç›?
+ * - entities = æµ¼ä½·ç¬Ÿæ¶“ç»˜æšŸéŽ¹î‡†ç´™L0 éšå¶…ç¶ + å©•æ—‚ãšé™ï½…ç·žæ·‡â€³å½¿/ç’‡å‹«åžŽç‘•å—™æ´Šé”›?
+ * - enrichments = L1/L2 éŽ¯å‘®å§¤ç€µå²„æ³¦é”›å œç«´æµ¼ä½·ç«´ç›å²‹ç´Excel ç‘•å—™æ´Šå¯®å¿“î‡±éãƒ¯ç´š
+ * - lifecycleEvents = ç»¾è·¨å‚¨é¢ç†·æ‡¡é›ã„¦æ¹¡æµœå¬©æ¬¢é”›å £æ‹·é”çŠ²ç´¡é”›å±¾ç´¡é‚æ¥ƒæ•±æµœå¬©æ¬¢å¨´ä½½ä»›éšå ¬ç´š
+ * - ruleConfigs = æ¶“æ°¬å§Ÿç‘™å‹«åž¯é–°å¶‡ç–†é”›å £ç˜Žé’å—˜æ½ˆé–²?é’å—™éª‡é—ƒå â‚¬?ç’‡æ¿‡æ¹³å¦¯â„ƒæ¾˜é”›å±¼ç²Žéšåº£î¬éŽ¸ä½¹æ¹é”›?
  * ============================================================ */
 
 export const entities = mysqlTable("entities", {
@@ -44,7 +44,7 @@ export const entities = mysqlTable("entities", {
   nature: varchar("nature", { length: 64 }).notNull(),
   cross: int("cross").default(0).notNull(),
   tierRole: mysqlEnum("tierRole", ["tenant", "operator", "support"]).default("tenant").notNull(),
-  hiringBase: mysqlEnum("hiringBase", ["é«˜", "ä¸­", "ä½Ž", "æ— "]).default("æ— ").notNull(),
+  hiringBase: mysqlEnum("hiringBase", ["æ¥‚?, "æ¶“?, "æµ£?, "éƒ?]).default("éƒ?).notNull(),
   note: text("note"),
   referralPath: mysqlEnum("referralPath", ["A", "B", "C", "D"]),
   entryPoint: text("entryPoint"),
@@ -82,7 +82,7 @@ export const enrichments = mysqlTable("enrichments", {
   keyContact: varchar("keyContact", { length: 128 }),
   referralVia: varchar("referralVia", { length: 128 }),
   referralNote: text("referralNote"),
-  verified: mysqlEnum("verified", ["å¾…æ ¸éªŒ", "å·²æ ¸éªŒ", "å­˜ç–‘", "ç‰Œé¢é®æŒ¡"]).default("å¾…æ ¸éªŒ").notNull(),
+  verified: mysqlEnum("verified", ["å¯°å‘®ç‰³æ¥ ?, "å®¸å‰ç‰³æ¥ ?, "ç€›æ¨¼æž’", "é—å²„æ½°é–¬î†½å°…"]).default("å¯°å‘®ç‰³æ¥ ?).notNull(),
   verifiedBy: varchar("verifiedBy", { length: 64 }),
   remark: text("remark"),
   importedAt: timestamp("importedAt").defaultNow().onUpdateNow().notNull(),
@@ -95,7 +95,7 @@ export const lifecycleEvents = mysqlTable("lifecycleEvents", {
   id: int("id").autoincrement().primaryKey(),
   tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
   eid: varchar("eid", { length: 16 }).notNull(),
-  stage: mysqlEnum("stage", ["æœªè§¦è¾¾", "å·²è§¦è¾¾", "å·²çº¦è§", "å·²æˆäº¤"]).notNull(),
+  stage: mysqlEnum("stage", ["éˆî‡Ð•æˆ?, "å®¸èŒ¶Ð•æˆ?, "å®¸èŒ¬å®³ç‘™?, "å®¸å‰åžšæµœ?]).notNull(),
   note: varchar("note", { length: 256 }),
   actor: varchar("actor", { length: 64 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -115,13 +115,13 @@ export const ruleConfigs = mysqlTable("ruleConfigs", {
 
 export type RuleConfigRow = typeof ruleConfigs.$inferSelect;
 
-/** ä»»åŠ¡å®Œæˆæ‰“å¡ï¼šæŸä¼ä¸šæŸç±»ä»»åŠ¡åœ¨æŸ ISO å‘¨è¢«å®Œæˆï¼ˆå‘¨æŠ¥å¤ç›˜æ•°æ®æºï¼‰ */
+/** æµ è¯²å§Ÿç€¹å±¾åžšéŽµæ’³å´±é”›æ°­ç…‡æµ¼ä½·ç¬ŸéŒæ„®è¢«æµ è¯²å§Ÿé¦ã„¦ç…‡ ISO é›ã„¨î¦ç€¹å±¾åžšé”›å æ‡†éŽ¶ãƒ¥î˜²é©æ¨»æšŸéŽ¹î†½ç°®é”›?*/
 export const taskCompletions = mysqlTable("taskCompletions", {
   id: int("id").autoincrement().primaryKey(),
   tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
   eid: varchar("eid", { length: 16 }).notNull(),
-  taskType: mysqlEnum("taskType", ["é¦–è§¦", "å¤è®¿", "åŸ¹è‚²è·Ÿè¿›"]).notNull(),
-  weekKey: varchar("weekKey", { length: 12 }).notNull(), // å¦‚ 2026-W31
+  taskType: mysqlEnum("taskType", ["æ££æ ¬Ð•", "æ¾¶å¶ˆî†–", "é©ç¡…å›ç’ºç†»ç¹˜"]).notNull(),
+  weekKey: varchar("weekKey", { length: 12 }).notNull(), // æ¿¡?2026-W31
   note: varchar("note", { length: 256 }),
   actor: varchar("actor", { length: 64 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -129,7 +129,7 @@ export const taskCompletions = mysqlTable("taskCompletions", {
 
 export type TaskCompletionRow = typeof taskCompletions.$inferSelect;
 
-/** æ“ä½œå°è´¦ï¼ˆè½»é‡ Decision Ledgerï¼Œå¯¹é½ ADR-16 ç•™ç—•å…¬ç†ï¼‰ï¼šå…³é”®åŠ¨ä½œåªå¢žä¸æ”¹ */
+/** éŽ¿å¶„ç¶”é™æ‹Œå¤„é”›å £äº¤é–²?Decision Ledgeré”›å±½î‡®æ¦»?ADR-16 é£æ¬‘æ£”éî„‚æ‚Šé”›å¤›ç´°éæŠ½æ•­é”ã„¤ç¶”é™î„î–ƒæ¶“å¶†æ•¼ */
 export const opsLedger = mysqlTable("opsLedger", {
   id: int("id").autoincrement().primaryKey(),
   tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
@@ -137,7 +137,7 @@ export const opsLedger = mysqlTable("opsLedger", {
   targetEid: varchar("targetEid", { length: 16 }),
   detail: varchar("detail", { length: 512 }),
   actor: varchar("actor", { length: 64 }),
-  /** è¿­ä»£6 å®¡è®¡å‡çº§ï¼šå˜æ›´å‰åŽå†…å®¹å¿«ç…§ï¼ˆJSON å­—ç¬¦ä¸²ï¼Œè§„åˆ™ä¿®æ”¹ç­‰ç»“æž„åŒ–å˜æ›´æ—¶å¡«å†™ï¼‰ */
+  /** æ©î…å”¬6 ç€¹Â¤î…¸é—å›©éª‡é”›æ°¬å½‰é‡æ‘å¢ éšåº¡å”´ç€¹ç‘°æ©é“Ñç´™JSON ç€›æ¥ƒîƒæ¶“è¯§ç´ç‘™å‹«åž¯æ·‡î†½æ•¼ç»›å¤Œç²¨é‹å‹«å¯²é™æ¨»æ´¿éƒè·ºï½žéæ¬™ç´š */
   beforeJson: text("beforeJson"),
   afterJson: text("afterJson"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
@@ -146,17 +146,17 @@ export const opsLedger = mysqlTable("opsLedger", {
 export type OpsLedgerRow = typeof opsLedger.$inferSelect;
 
 /* ============================================================
- * è¿­ä»£11 Â· å…³ç³»å›¾è°±æ•°æ®åŒ–ï¼šèŠ‚ç‚¹/è¾¹å…¥åº“ï¼ˆå›¾æ•°æ®æ¨¡åž‹ï¼‰
- * èŠ‚ç‚¹ç±»åž‹ï¼šcompany ä¼ä¸š / person äºº / platform å¹³å° / dept é™¢ç³»
- * è¾¹ç±»åž‹ï¼šreferral å¼•è / alumni æ ¡å‹ / pipeline ç®¡é“ / partner åˆä½œ
+ * æ©î…å”¬11 è·¯ éå´‡éƒ´é¥ææ°¨éç‰ˆåµé–æ µç´°é‘ºå‚œå£/æˆç‘°å†æ´æ“„ç´™é¥ç‚¬æšŸéŽ¹î†½Äé¨å¬¶ç´š
+ * é‘ºå‚œå£ç»«è¯²ç€·é”›æ­ompany æµ¼ä½·ç¬Ÿ / person æµœ?/ platform éªžå†²å½´ / dept é—„ãˆ¢éƒ´
+ * æˆåœ­è¢«é¨å¬¶ç´°referral å¯®æ›¡å´˜ / alumni éâ€³å¼¸ / pipeline ç» ï¿ äº¾ / partner éšå œç¶”
  * ============================================================ */
 export const graphNodes = mysqlTable("graphNodes", {
   id: int("id").autoincrement().primaryKey(),
   tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  nodeKey: varchar("nodeKey", { length: 64 }).notNull().unique(), // å¦‚ E703 / plat:xinruan / dept:swe
+  nodeKey: varchar("nodeKey", { length: 64 }).notNull().unique(), // æ¿¡?E703 / plat:xinruan / dept:swe
   kind: mysqlEnum("kind", ["company", "person", "platform", "dept"]).notNull(),
   label: varchar("label", { length: 128 }).notNull(),
-  attrsJson: text("attrsJson"), // é™„åŠ å±žæ€§ JSONï¼ˆèŒåŠ¡/ä¸»åŠžæ–¹/æ¥¼å±‚ç­‰ï¼‰
+  attrsJson: text("attrsJson"), // é—„å‹«å§žçžç‚´â‚¬?JSONé”›å £äº´é”?æ¶“è¯²å§™é‚?å¦¤ç…Žçœ°ç»›å¤›ç´š
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -166,9 +166,9 @@ export const graphEdges = mysqlTable("graphEdges", {
   fromKey: varchar("fromKey", { length: 64 }).notNull(),
   toKey: varchar("toKey", { length: 64 }).notNull(),
   relType: mysqlEnum("relType", ["referral", "alumni", "pipeline", "partner"]).notNull(),
-  strength: int("strength").default(50).notNull(), // 0-100 å…³ç³»å¼ºåº¦
-  evidence: varchar("evidence", { length: 255 }), // è¯æ®æè¿°ï¼ˆæ¥¼å±‚ç´¢å¼•å®žå‹˜/å…¬å¼€ä¿¡æ¯/ç”Ÿæ€åè®®ï¼‰
-  pathTag: varchar("pathTag", { length: 8 }), // å½’å±žæš–å¼•èè·¯å¾„ A/B/C/Dï¼ˆå¯ç©ºï¼‰
+  strength: int("strength").default(50).notNull(), // 0-100 éå´‡éƒ´å¯®å“„å®³
+  evidence: varchar("evidence", { length: 255 }), // ç’‡ä½¹åµéŽ»å¿šå ªé”›å Ÿã‚¼çžå‚œå‚¨å¯®æ›žç–„é•?éî„€ç´‘æ·‡â„ƒä¼…/é¢ç†¸â‚¬ä½¸å´—ç’î‡†ç´š
+  pathTag: varchar("pathTag", { length: 8 }), // è¤°æŽ‘ç˜é†æ §ç´©é‘½æ„¯çŸ¾å¯°?A/B/C/Dé”›å å½²ç»ŒçŒ´ç´š
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -176,19 +176,19 @@ export type GraphNodeRow = typeof graphNodes.$inferSelect;
 export type GraphEdgeRow = typeof graphEdges.$inferSelect;
 
 /* ============================================================
- * è¿­ä»£12 Â· è§£æžåŽ†å²è®°å½•ï¼šæ¯æ¬¡ AI è§£æž/å¯¼å…¥å†™å…¥çš„åŽŸæ–‡ä¸Žç»“æžœå¿«ç…§
- * - è¯æ®é“¾å¼ºåŒ–ï¼šæ”¯æŒå›žæº¯ã€Œè¿™ä¸ªå­—æ®µæ˜¯å“ªæ¬¡è§£æžå†™å…¥çš„ã€
- * - sourceTypeï¼šai_parse å•å®¶è§£æž / ai_parse_batch æ‰¹é‡è§£æž / excel_import Excel å¯¼å…¥
+ * æ©î…å”¬12 è·¯ ç‘™ï½†ç€½é˜å——å½¶ç’æ¿ç¶é”›æ°­ç˜¡å¨†?AI ç‘™ï½†ç€½/ç€µç…Žå†éæ¬å†é¨å‹«å¸«é‚å›¦ç¬Œç¼æ’´ç‰è¹‡î‚¤åŽ
+ * - ç’‡ä½¹åµé–¾æƒ§å·±é–æ µç´°é€îˆ›å¯”é¥ç‚´å‡½éŠ†å²ƒç¹–æ¶“î„ç“§å¨ˆåž«æ§¸éî…î‚¼ç‘™ï½†ç€½éæ¬å†é¨å‹©â‚¬?
+ * - sourceTypeé”›æ­›i_parse é—æ›žî†ç‘™ï½†ç€½ / ai_parse_batch éŽµå½’å™ºç‘™ï½†ç€½ / excel_import Excel ç€µç…Žå†
  * ============================================================ */
 export const parseHistory = mysqlTable("parseHistory", {
   id: int("id").autoincrement().primaryKey(),
   tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
   eid: varchar("eid", { length: 16 }).notNull(),
   sourceType: mysqlEnum("sourceType", ["ai_parse", "ai_parse_batch", "excel_import"]).notNull(),
-  rawText: text("rawText"), // åŽŸæ–‡å¿«ç…§ï¼ˆAI è§£æžåœºæ™¯ï¼›Excel å¯¼å…¥ä¸ºè¡Œ JSONï¼‰
-  resultJson: text("resultJson").notNull(), // æŠ½å–/å†™å…¥ç»“æžœå¿«ç…§ JSON
-  fieldsWritten: text("fieldsWritten").notNull(), // å®žé™…å†™å…¥å­—æ®µåæ¸…å•ï¼ˆé€—å·åˆ†éš”ï¼‰
-  confidence: varchar("confidence", { length: 8 }), // è§£æžç½®ä¿¡åº¦ï¼ˆAI åœºæ™¯ï¼‰
+  rawText: text("rawText"), // é˜ç†¸æžƒè¹‡î‚¤åŽé”›åœ“I ç‘™ï½†ç€½é¦çƒ˜æ«™é”›æ±¦xcel ç€µç…Žå†æ¶“é¸¿î”‘ JSONé”›?
+  resultJson: text("resultJson").notNull(), // éŽ¶è—‰å½‡/éæ¬å†ç¼æ’´ç‰è¹‡î‚¤åŽ JSON
+  fieldsWritten: text("fieldsWritten").notNull(), // ç€¹ç‚ºæª¯éæ¬å†ç€›æ¥î†Œéšå¶†ç«»é—æ›ªç´™é–«æ¥€å½¿é’å—›æ®§é”›?
+  confidence: varchar("confidence", { length: 8 }), // ç‘™ï½†ç€½ç¼ƒî†»ä¿Šæ´ï¸¼ç´™AI é¦çƒ˜æ«™é”›?
   actor: varchar("actor", { length: 64 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
@@ -196,380 +196,65 @@ export const parseHistory = mysqlTable("parseHistory", {
 export type ParseHistoryRow = typeof parseHistory.$inferSelect;
 
 /* ============================================================
- * è¿­ä»£13 Â· å†³ç­–é—­çŽ¯ï¼ˆDecision Loopï¼‰ï¼šå†³ç­–æˆä¸ºä¸€ç­‰å¯¹è±¡
- * - æ¯æ¡ AI å»ºè®® = ä¸€æ¡ decision è®°å½•ï¼Œå¯é‡‡çº³/æŒ‡æ´¾/æ‰§è¡Œ/å›žå¡«ç»“æžœ
- * - çŠ¶æ€æœºï¼šsuggested â†’ adopted â†’ executing â†’ done / dismissed
- * - dtype äº”ç±»ï¼šcontact ç«‹å³è”ç³» / mentor å®‰æŽ’å¯¼å¸ˆ / hr_service HRæœåŠ¡
- *   / policy æ”¿ç­–ç”³æŠ¥ / referral æš–å¼•è
+ * æ©î…å”¬13 è·¯ éå´‡ç“¥é—‚î… å¹†é”›åœ–ecision Loopé”›å¤›ç´°éå´‡ç“¥éŽ´æ„ªè´Ÿæ¶“â‚¬ç»›å¤Šî‡®ç’ž?
+ * - å§£å¿”æ½¯ AI å¯¤é¸¿î†… = æ¶“â‚¬é‰?decision ç’æ¿ç¶é”›å±½å½²é–²å›©æ’¼/éŽ¸å›¨æ·³/éŽµÑ†î”‘/é¥ç‚²ï½žç¼æ’´ç‰
+ * - é˜èˆµâ‚¬ä½¹æº€é”›æ­´uggested éˆ«?adopted éˆ«?executing éˆ«?done / dismissed
+ * - dtype æµœæ—‚è¢«é”›æ­ontact ç»”å¬ªåµ†é‘±æ—‚éƒ´ / mentor ç€¹å¤‹å¸“ç€µç…Žç¬€ / hr_service HRéˆå¶…å§Ÿ
+ *   / policy é€è·¨ç“¥é¢è™«å§¤ / referral é†æ §ç´©é‘½?
  * ============================================================ */
 export const decisions = mysqlTable("decisions", {
   id: int("id").autoincrement().primaryKey(),
   tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
   eid: varchar("eid", { length: 16 }).notNull(),
   dtype: mysqlEnum("dtype", ["contact", "mentor", "hr_service", "policy", "referral"]).notNull(),
-  title: varchar("title", { length: 255 }).notNull(), // å»ºè®®åŠ¨ä½œæ ‡é¢˜
-  reason: text("reason").notNull(), // åŽŸå› é“¾ï¼ˆä¿¡å·/ç”»å¸ƒ/é˜¶æ®µè¯æ®ï¼Œåˆ†å·åˆ†éš”ï¼‰
-  stars: int("stars").default(3).notNull(), // 1-5 ä¼˜å…ˆæ˜Ÿçº§ï¼ˆå†³ç­–å¼•æ“Žè®¡ç®—ï¼‰
-  needTag: varchar("needTag", { length: 16 }), // å…³è”éœ€æ±‚ç»´åº¦ï¼ˆtalent/funding/policy/...ï¼‰
-  matchedResources: text("matchedResources"), // åŒ¹é…èµ„æºå¿«ç…§ JSONï¼ˆTop-3ï¼‰
+  title: varchar("title", { length: 255 }).notNull(), // å¯¤é¸¿î†…é”ã„¤ç¶”éå›¬î•½
+  reason: text("reason").notNull(), // é˜ç†·æ´œé–¾æ’…ç´™æ·‡â€³å½¿/é¢è¯²ç«·/é—ƒèˆµî†Œç’‡ä½¹åµé”›å±½åžŽé™å³°åžŽé—…æ—“ç´š
+  stars: int("stars").default(3).notNull(), // 1-5 æµ¼æ¨ºåŽ›é„ç†ºéª‡é”›å å–…ç»›æ §ç´©éŽ¿åº¤î…¸ç» æ¥‹ç´š
+  needTag: varchar("needTag", { length: 16 }), // éå® ä»ˆé—‡â‚¬å§¹å‚œæ·®æ´ï¸¼ç´™talent/funding/policy/...é”›?
+  matchedResources: text("matchedResources"), // é–å½’åŽ¤ç’§å‹¬ç°®è¹‡î‚¤åŽ JSONé”›åœ±op-3é”›?
   status: mysqlEnum("status", ["suggested", "adopted", "executing", "done", "dismissed"]).default("suggested").notNull(),
-  assignee: varchar("assignee", { length: 64 }), // é‡‡çº³æ—¶æŒ‡æ´¾è´Ÿè´£äºº
-  outcome: varchar("outcome", { length: 16 }), // ç»“æžœï¼šwon / lost / partialï¼ˆdone æ—¶å›žå¡«ï¼‰
-  outcomeNote: varchar("outcomeNote", { length: 255 }), // ç»“æžœè¯´æ˜Žï¼ˆæˆäº¤é‡‘é¢/å¤±è´¥åŽŸå› ï¼‰
-  dealAmount: int("dealAmount"), // è¿­ä»£14 Â· æˆäº¤é‡‘é¢ï¼ˆå…ƒï¼Œwon/partial æ—¶å›žå¡«ï¼Œé‡‘é¢å£å¾„ ROI ä¾æ®ï¼‰
-  revenueTier: varchar("revenueTier", { length: 24 }), // å½’å› æ”¶å…¥å±‚ï¼ˆmarketplace/operation/consulting/ai_capabilityï¼‰
-  resourceId: int("resourceId"), // è¿­ä»£15 Â· æ‰§è¡Œå ç”¨çš„èµ„æº IDï¼ˆexecuting æ—¶é”å®šåé¢ï¼Œdone/dismissed é‡Šæ”¾ï¼‰
-  basedOn: text("basedOn"), // è¿­ä»£18 Â· å·¥å•3 Â· å®Œæ•´æº¯æºé“¾ JSONï¼š{signals[],rules[],ruleVersions{},evidence[],canvas,lifecycle,score}ï¼ˆADR-01ï¼‰
-  genKey: varchar("genKey", { length: 128 }).notNull().unique(), // å¹‚ç­‰é”®ï¼šeid:dtype:ä¾æ®æ‘˜è¦ï¼Œé˜²é‡å¤ç”Ÿæˆ
+  assignee: varchar("assignee", { length: 64 }), // é–²å›©æ’¼éƒèˆµå¯šå¨²æç¤‹ç’ï½„æ±‰
+  outcome: varchar("outcome", { length: 16 }), // ç¼æ’´ç‰é”›æ­¸on / lost / partialé”›å‰one éƒè·ºæ´–æ¿‰î‚¬ç´š
+  outcomeNote: varchar("outcomeNote", { length: 255 }), // ç¼æ’´ç‰ç’‡å­˜æ§‘é”›å Ÿåžšæµœã‚‰å™¾æ£°?æ¾¶è¾«è§¦é˜ç†·æ´œé”›?
+  dealAmount: int("dealAmount"), // æ©î…å”¬14 è·¯ éŽ´æ„ªæ°¦é–²æˆ¦î–‚é”›å åŽ“é”›å¯ƒon/partial éƒè·ºæ´–æ¿‰î‚¬ç´é–²æˆ¦î–‚é™ï½…ç·ž ROI æ¸šæ¿‡åµé”›?
+  revenueTier: varchar("revenueTier", { length: 24 }), // è¤°æŽ‘æ´œé€è·ºå†çžå‚¦ç´™marketplace/operation/consulting/ai_capabilityé”›?
+  resourceId: int("resourceId"), // æ©î…å”¬15 è·¯ éŽµÑ†î”‘é—çŠµæ•¤é¨å‹®ç¥«å©§?IDé”›å‹xecuting éƒå •æ”£ç€¹æ°¬æ‚•æ£°æ¿“ç´done/dismissed é–²å©ƒæ–é”›?
+  basedOn: text("basedOn"), // æ©î…å”¬18 è·¯ å®¸ãƒ¥å´Ÿ3 è·¯ ç€¹å±¾æš£å©§îˆ›ç°®é–¾?JSONé”›æ­¿signals[],rules[],ruleVersions{},evidence[],canvas,lifecycle,score}é”›åœ“DR-01é”›?
+  genKey: varchar("genKey", { length: 128 }).notNull().unique(), // éªžå‚œç“‘é–¿î‡†ç´°eid:dtype:æ¸šæ¿‡åµéŽ½æ¨¿î›¦é”›å²„æ§»é–²å¶…î˜²é¢ç†¸åžš
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type DecisionRow = typeof decisions.$inferSelect;
 
-/* è¿­ä»£13 Â· èµ„æºåº“ï¼šMarketplace æ”¶å…¥å±‚çš„äº§å“åº•åº§
- * rtypeï¼šmentor å¯¼å¸ˆ / headhunter çŒŽå¤´ / alumni æ ¡å‹ / professor æ•™æŽˆ
- *        / investor æŠ•èµ„äºº / lawfirm å¾‹æ‰€ / tax è´¢ç¨Ž / vendor æœåŠ¡å•† / gaoyu é«˜äºŽäººåŠ› */
+/* æ©î…å”¬13 è·¯ ç’§å‹¬ç°®æ´æ“„ç´°Marketplace é€è·ºå†çžå‚œæ®‘æµœÑƒæ§æ´æ›žéª‡
+ * rtypeé”›æ­®entor ç€µç…Žç¬€ / headhunter éšåº¡ã” / alumni éâ€³å¼¸ / professor éæ¬å·¿
+ *        / investor éŽ¶æ›¡ç¥«æµœ?/ lawfirm å¯°å¬«å¢ / tax ç’ãˆ¢â—£ / vendor éˆå¶…å§ŸéŸ?/ gaoyu æ¥‚æ¨¹ç°¬æµœå“„å§ */
 export const resources = mysqlTable("resources", {
   id: int("id").autoincrement().primaryKey(),
   tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
   rtype: mysqlEnum("rtype", ["mentor", "headhunter", "alumni", "professor", "investor", "lawfirm", "tax", "vendor", "gaoyu"]).notNull(),
   name: varchar("name", { length: 128 }).notNull(),
-  org: varchar("org", { length: 128 }), // æ‰€å±žæœºæž„
-  needTags: varchar("needTags", { length: 128 }).notNull(), // å¯æœåŠ¡éœ€æ±‚ç»´åº¦ï¼ˆé€—å·åˆ†éš”ï¼štalent,funding,...ï¼‰
-  indTags: varchar("indTags", { length: 128 }), // æ“…é•¿è¡Œä¸šï¼ˆé€—å·åˆ†éš”ï¼Œç©º=å…¨è¡Œä¸šï¼‰
-  stageTags: varchar("stageTags", { length: 128 }), // é€‚é…ç”Ÿå‘½å‘¨æœŸé˜¶æ®µï¼ˆé€—å·åˆ†éš”ï¼Œç©º=å…¨é˜¶æ®µï¼‰
-  capacity: int("capacity").default(5).notNull(), // æœ¬æœŸå¯æ‰¿æŽ¥åé¢
-  graphKey: varchar("graphKey", { length: 64 }), // å…³è”å›¾è°±èŠ‚ç‚¹ keyï¼ˆå¤ç”¨æš–å¼•èé“¾è·¯ï¼‰
+  org: varchar("org", { length: 128 }), // éŽµâ‚¬çžç‚´æº€é‹?
+  needTags: varchar("needTags", { length: 128 }).notNull(), // é™îˆ›æ¹‡é”ï¿ æ¸¶å§¹å‚œæ·®æ´ï¸¼ç´™é–«æ¥€å½¿é’å—›æ®§é”›æ­µalent,funding,...é”›?
+  indTags: varchar("indTags", { length: 128 }), // éŽ¿å‘´æš±ç›å±¼ç¬Ÿé”›å ¥â‚¬æ¥€å½¿é’å—›æ®§é”›å²€â”–=éã„¨î”‘æ¶“æ°¾ç´š
+  stageTags: varchar("stageTags", { length: 128 }), // é–«å‚žåŽ¤é¢ç†·æ‡¡é›ã„¦æ¹¡é—ƒèˆµî†Œé”›å ¥â‚¬æ¥€å½¿é’å—›æ®§é”›å²€â”–=éã„©æ¨å¨ˆç¢‰ç´š
+  capacity: int("capacity").default(5).notNull(), // éˆî„æ¹¡é™îˆ›å£™éŽºãƒ¥æ‚•æ£°?
+  graphKey: varchar("graphKey", { length: 64 }), // éå® ä»ˆé¥ææ°¨é‘ºå‚œå£ keyé”›å î˜²é¢ã„¦æ®©å¯®æ›¡å´˜é–¾æçŸ¾é”›?
   note: varchar("note", { length: 255 }),
   active: int("active").default(1).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-
-export type ResourceRow = typeof resources.$inferSelect;
-
-/* ============================================================
- * è¿­ä»£17 Â· å·¥å•1 Â· è¿žæŽ¥å™¨æ¡†æž¶ + ACL é˜²è…å±‚ï¼ˆADR-06 ç«¯å£é€‚é…å™¨ï¼‰
- * - connectorsTableï¼šå¤–éƒ¨æ•°æ®æºç»Ÿä¸€æ³¨å†Œè¡¨
- * - ingestionJobsï¼šæ¯æ¬¡æ‹‰å–/å¯¼å…¥å†™ä¸€æ¡ job ç•™ç—•ï¼ˆå¯å”®å®¡è®¡è¦æ±‚ï¼‰
- * ============================================================ */
-export const connectorsTable = mysqlTable("connectors", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  cid: varchar("cid", { length: 64 }).notNull().unique(), // biz-registry/job-board/patent/manual-enrichment
-  name: varchar("name", { length: 128 }).notNull(),
-  ctype: mysqlEnum("ctype", ["manual", "csv", "paste", "api"]).notNull(),
-  status: mysqlEnum("status", ["active", "planned", "paused", "error"]).default("planned").notNull(),
-  source: varchar("source", { length: 256 }), // æ•°æ®æ¥æºæè¿°ï¼ˆè¯æ®é“¾ï¼‰
-  configJson: text("configJson"),
-  lastRunAt: timestamp("lastRunAt"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-export type ConnectorTableRow = typeof connectorsTable.$inferSelect;
-
-export const ingestionJobs = mysqlTable("ingestionJobs", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  connectorId: varchar("connectorId", { length: 64 }).notNull(), // connectors.cid
-  status: mysqlEnum("status", ["running", "success", "partial", "failed"]).default("running").notNull(),
-  rowsIn: int("rowsIn").default(0).notNull(),   // åŽŸå§‹è¡Œæ•°
-  rowsOut: int("rowsOut").default(0).notNull(), // ç» ACL è½¬æ¢åŽå…¥åº“è¡Œæ•°
-  rowsSkipped: int("rowsSkipped").default(0).notNull(),
-  error: text("error"),
-  summaryJson: text("summaryJson"), // æ˜Žç»†æ‘˜è¦ï¼ˆå†™å…¥å­—æ®µ/æ¶‰åŠä¼ä¸š/è§¦å‘å®žä½“è§£æžç»“æžœï¼‰
-  triggeredBy: varchar("triggeredBy", { length: 64 }),
-  startedAt: timestamp("startedAt").defaultNow().notNull(),
-  finishedAt: timestamp("finishedAt"),
-});
-export type IngestionJobRow = typeof ingestionJobs.$inferSelect;
-
-/* ============================================================
- * è¿­ä»£17 Â· å·¥å•2 Â· å®žä½“è§£æžå¼•æ“Ž
- * mergeDecisionsï¼šåˆå¹¶å†³ç­–ï¼ˆç½®ä¿¡åº¦+è¯æ®é“¾+äººå·¥æ¶ˆæ­§çŠ¶æ€æœºï¼‰
- * çŠ¶æ€æœºï¼šauto_mergedï¼ˆé«˜ç½®ä¿¡è‡ªåŠ¨ï¼‰/ pendingï¼ˆä½Žç½®ä¿¡è¿›äººå·¥é˜Ÿåˆ—ï¼‰
- *         â†’ confirmedï¼ˆäººå·¥ç¡®è®¤åˆå¹¶ï¼‰/ splitï¼ˆäººå·¥æ‹†åˆ†ï¼‰/ dismissedï¼ˆå­˜ç–‘æç½®ï¼‰
- * ============================================================ */
-export const mergeDecisions = mysqlTable("mergeDecisions", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  sourceEids: text("sourceEids").notNull(),     // JSON æ•°ç»„ï¼šå€™é€‰åˆå¹¶ eid åˆ—è¡¨
-  targetEid: varchar("targetEid", { length: 16 }).notNull(),
-  confidence: int("confidence").notNull(),      // 0-100 åŒ¹é…ç½®ä¿¡åº¦
-  evidenceJson: text("evidenceJson").notNull(), // è¯æ®é“¾ï¼šå½’ä¸€åŒ–å/USCC/æ¥¼å±‚/åŒ¹é…è§„åˆ™å‘½ä¸­
-  status: mysqlEnum("status", ["auto_merged", "pending", "confirmed", "split", "dismissed"]).default("pending").notNull(),
-  decidedBy: varchar("decidedBy", { length: 64 }), // äººå·¥æ¶ˆæ­§æ“ä½œäººï¼ˆè‡ªåŠ¨åˆå¹¶ä¸º engineï¼‰
-  decidedAt: timestamp("decidedAt"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-export type MergeDecisionRow = typeof mergeDecisions.$inferSelect;
-
-/* ============================================================
- * è¿­ä»£18 Â· å·¥å•4 Â· å®‰å…¨åˆè§„äº§å“åŒ–ï¼ˆADR-04ï¼‰
- * consentsï¼šPIPL åŒæ„ç®¡ç†ï¼ˆä¸»ä½“/èŒƒå›´/æœ‰æ•ˆæœŸ/æ’¤å›žï¼‰
- * accessPoliciesï¼šRBAC-ABAC å±žæ€§ç­–ç•¥ï¼ˆè§’è‰² Ã— æ•°æ®åˆ†çº§ Ã— å­—æ®µç»„ï¼‰
- * ============================================================ */
-export const consents = mysqlTable("consents", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  eid: varchar("eid", { length: 16 }).notNull(), // æ•°æ®ä¸»ä½“ï¼ˆä¼ä¸šï¼‰
-  scope: mysqlEnum("scope", ["contact_info", "hr_data", "finance_data", "full_profile"]).notNull(), // åŒæ„èŒƒå›´
-  status: mysqlEnum("status", ["granted", "revoked", "expired"]).default("granted").notNull(),
-  grantedBy: varchar("grantedBy", { length: 64 }), // æŽˆæƒæ¥æºï¼ˆè”ç³»äºº/åˆåŒç¼–å·/å…¬å¼€æ¸ é“å£°æ˜Žï¼‰
-  basis: varchar("basis", { length: 255 }), // åˆæ³•æ€§åŸºç¡€ï¼ˆåˆåŒå±¥è¡Œ/å…¬å¼€ä¿¡æ¯/æ˜Žç¤ºåŒæ„ï¼‰
-  expiresAt: timestamp("expiresAt"), // æœ‰æ•ˆæœŸï¼ˆç©º=é•¿æœŸï¼Œæ’¤å›žå³å¤±æ•ˆï¼‰
-  revokedAt: timestamp("revokedAt"),
-  revokedBy: varchar("revokedBy", { length: 64 }),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-export type ConsentRow = typeof consents.$inferSelect;
-
-export const accessPolicies = mysqlTable("accessPolicies", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  role: mysqlEnum("role", ["user", "admin"]).notNull(),
-  fieldGroup: mysqlEnum("fieldGroup", ["public", "business", "sensitive", "pii"]).notNull(), // æ•°æ®åˆ†çº§
-  effect: mysqlEnum("effect", ["allow", "mask", "deny"]).notNull(),
-  condition: varchar("condition", { length: 255 }), // å±žæ€§æ¡ä»¶æè¿°ï¼ˆå¦‚ requires_consentï¼‰
-  updatedBy: varchar("updatedBy", { length: 64 }),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-export type AccessPolicyRow = typeof accessPolicies.$inferSelect;
-
-/* ============================================================
- * è¿­ä»£21 Â· å·¥å•8 Â· å·¥ä½œæµå¼•æ“Žï¼ˆCap-07ï¼Œä¾èµ–å·¥å•3ï¼‰
- * workflowDefsï¼šé…ç½®åŒ–æµç¨‹å®šä¹‰ï¼ˆstepsJson = æ­¥éª¤æ•°ç»„ï¼škind/title/slaHours/compensationï¼‰
- * workflowInstancesï¼šæµç¨‹å®žä¾‹ï¼ˆå·²æ‰¹å‡†å†³ç­–è§¦å‘ï¼›stepStatesJson å«æ¯æ­¥çŠ¶æ€/å¹‚ç­‰é”®/è¡¥å¿è®°å½•ï¼‰
- * workflowTasksï¼šäººå·¥ä»»åŠ¡ï¼ˆSLA è®¡æ—¶ + è¶…æ—¶å‡çº§ï¼‰
- * ============================================================ */
-export const workflowDefs = mysqlTable("workflowDefs", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  defKey: varchar("defKey", { length: 64 }).notNull().unique(),
-  name: varchar("name", { length: 128 }).notNull(),
-  decisionType: varchar("decisionType", { length: 32 }), // ç»‘å®šå†³ç­–ç±»åž‹ï¼ˆcontact/mentor/...ï¼Œç©º=é€šç”¨ï¼‰
-  stepsJson: text("stepsJson").notNull(),
-  active: int("active").default(1).notNull(),
-  version: int("version").default(1).notNull(),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-export type WorkflowDefRow = typeof workflowDefs.$inferSelect;
-
-export const workflowInstances = mysqlTable("workflowInstances", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  defKey: varchar("defKey", { length: 64 }).notNull(),
-  decisionId: int("decisionId"),
-  eid: varchar("eid", { length: 16 }),
-  status: mysqlEnum("status", ["running", "done", "failed", "compensated"]).default("running").notNull(),
-  currentStep: int("currentStep").default(0).notNull(),
-  stepStatesJson: text("stepStatesJson").notNull(),
-  startedBy: varchar("startedBy", { length: 64 }),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-export type WorkflowInstanceRow = typeof workflowInstances.$inferSelect;
-
-export const workflowTasks = mysqlTable("workflowTasks", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  instanceId: int("instanceId").notNull(),
-  stepIndex: int("stepIndex").notNull(),
-  title: varchar("title", { length: 255 }).notNull(),
-  assignee: varchar("assignee", { length: 64 }),
-  status: mysqlEnum("status", ["open", "done", "escalated", "cancelled"]).default("open").notNull(),
-  slaHours: int("slaHours").default(72).notNull(),
-  dueAt: timestamp("dueAt"),
-  escalatedTo: varchar("escalatedTo", { length: 64 }),
-  doneAt: timestamp("doneAt"),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-export type WorkflowTaskRow = typeof workflowTasks.$inferSelect;
-
-/* ============================================================
- * è¿­ä»£28 Â· æ•°æ®æ¥æºä¸Žè¯æ®æ²»ç†ç³»ç»Ÿ
- * dataSources / ingestionBatches / evidenceRecords / dataConflicts
- * entityAliases / sourceFieldPolicies / decisionEvidenceLinks
- * ============================================================ */
-
-/** æ•°æ®æ¥æºç›®å½• */
-export const dataSources = mysqlTable("dataSources", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  sourceKey: varchar("sourceKey", { length: 64 }).notNull().unique(),
-  name: varchar("name", { length: 128 }).notNull(),
-  category: mysqlEnum("category", ["government", "company_official", "commercial_database", "recruitment", "media", "park_internal", "field_visit", "enterprise_submission", "other"]).notNull(),
-  provider: varchar("provider", { length: 128 }),
-  acquisitionChannel: mysqlEnum("acquisitionChannel", ["manual_paste", "excel", "api", "form", "system_sync", "file_upload", "email", "other"]).default("other").notNull(),
-  sourceScope: varchar("sourceScope", { length: 255 }),
-  homepageUrl: varchar("homepageUrl", { length: 512 }),
-  ownerDepartment: varchar("ownerDepartment", { length: 64 }),
-  ownerName: varchar("ownerName", { length: 64 }),
-  authorizationType: mysqlEnum("authorizationType", ["public", "user_provided", "contractual", "internal", "unknown"]).default("unknown").notNull(),
-  authorizationNote: text("authorizationNote"),
-  refreshMode: mysqlEnum("refreshMode", ["one_time", "manual", "scheduled", "event_driven"]).default("manual").notNull(),
-  refreshFrequency: varchar("refreshFrequency", { length: 32 }),
-  reliabilityLevel: mysqlEnum("reliabilityLevel", ["A", "B", "C", "D", "ungraded"]).default("ungraded").notNull(),
-  sensitivityLevel: varchar("sensitivityLevel", { length: 16 }),
-  status: mysqlEnum("dsStatus", ["active", "paused", "planned", "retired"]).default("active").notNull(),
-  lastSuccessfulSyncAt: timestamp("lastSuccessfulSyncAt"),
-  lastFailedSyncAt: timestamp("lastFailedSyncAt"),
-  lastFailureReason: text("lastFailureReason"),
-  createdBy: varchar("createdBy", { length: 64 }),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
-export type DataSourceRow = typeof dataSources.$inferSelect;
-
-/** æ•°æ®å…¥åº“æ‰¹æ¬¡ */
-export const ingestionBatches = mysqlTable("ingestionBatches", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  batchKey: varchar("batchKey", { length: 64 }).notNull().unique(),
-  sourceId: int("sourceId").notNull(),
-  acquisitionChannel: mysqlEnum("ibAcqChannel", ["manual_paste", "excel", "api", "form", "system_sync", "file_upload", "email", "other"]).default("excel").notNull(),
-  processingMethod: mysqlEnum("processingMethod", ["ai_extract", "rule_parse", "direct_mapping", "manual_entry", "connector_sync"]).default("direct_mapping").notNull(),
-  originalFileName: varchar("originalFileName", { length: 255 }),
-  originalFileUrl: varchar("originalFileUrl", { length: 512 }),
-  originalPageUrl: varchar("originalPageUrl", { length: 512 }),
-  collectedAt: timestamp("collectedAt"),
-  effectiveAt: timestamp("effectiveAt"),
-  expiresAt: timestamp("expiresAt"),
-  status: mysqlEnum("ibStatus", ["draft", "parsing", "review", "committed", "failed", "rolled_back"]).default("draft").notNull(),
-  totalRecords: int("totalRecords").default(0).notNull(),
-  matchedRecords: int("matchedRecords").default(0).notNull(),
-  createdRecords: int("createdRecords").default(0).notNull(),
-  updatedRecords: int("updatedRecords").default(0).notNull(),
-  conflictRecords: int("conflictRecords").default(0).notNull(),
-  failedRecords: int("failedRecords").default(0).notNull(),
-  actor: varchar("ibActor", { length: 64 }).notNull(),
-  notes: text("ibNotes"),
-  beforeSnapshotJson: text("beforeSnapshotJson"),
-  afterSnapshotJson: text("afterSnapshotJson"),
-  createdAt: timestamp("ibCreatedAt").defaultNow().notNull(),
-  completedAt: timestamp("completedAt"),
-  rolledBackAt: timestamp("rolledBackAt"),
-  rolledBackBy: varchar("rolledBackBy", { length: 64 }),
-});
-export type IngestionBatchRow = typeof ingestionBatches.$inferSelect;
-
-/** å­—æ®µçº§è¯æ® */
-export const evidenceRecords = mysqlTable("evidenceRecords", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  evidenceKey: varchar("evidenceKey", { length: 128 }).notNull().unique(),
-  eid: varchar("eid", { length: 16 }).notNull(),
-  fieldName: varchar("fieldName", { length: 64 }).notNull(),
-  normalizedValue: text("normalizedValue"),
-  originalValue: text("originalValue"),
-  valueType: varchar("valueType", { length: 16 }),
-  sourceId: int("sourceId").notNull(),
-  batchId: int("batchId").notNull(),
-  sourceRecordKey: varchar("sourceRecordKey", { length: 128 }),
-  evidenceExcerpt: text("evidenceExcerpt"),
-  evidenceLocation: varchar("evidenceLocation", { length: 128 }),
-  originalUrl: varchar("originalUrl", { length: 512 }),
-  originalFileName: varchar("erOriginalFileName", { length: 255 }),
-  collectedAt: timestamp("erCollectedAt"),
-  effectiveAt: timestamp("erEffectiveAt"),
-  expiresAt: timestamp("erExpiresAt"),
-  confidenceScore: int("confidenceScore"),
-  confidenceLabel: mysqlEnum("confidenceLabel", ["high", "medium", "low", "unknown"]).default("unknown").notNull(),
-  verificationStatus: mysqlEnum("verificationStatus", ["pending", "verified", "disputed", "rejected", "expired"]).default("pending").notNull(),
-  verifiedBy: varchar("erVerifiedBy", { length: 64 }),
-  verifiedAt: timestamp("erVerifiedAt"),
-  processingMethod: varchar("erProcessingMethod", { length: 32 }),
-  modelName: varchar("modelName", { length: 64 }),
-  modelVersion: varchar("modelVersion", { length: 32 }),
-  transformationRule: varchar("transformationRule", { length: 128 }),
-  reliabilityScore: int("reliabilityScore"),
-  isCurrent: int("isCurrent").default(0).notNull(),
-  supersededByEvidenceId: int("supersededByEvidenceId"),
-  createdAt: timestamp("erCreatedAt").defaultNow().notNull(),
-});
-export type EvidenceRecordRow = typeof evidenceRecords.$inferSelect;
-
-/** æ•°æ®å†²çª */
-export const dataConflicts = mysqlTable("dataConflicts", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  conflictKey: varchar("conflictKey", { length: 128 }).notNull().unique(),
-  eid: varchar("dcEid", { length: 16 }).notNull(),
-  fieldName: varchar("dcFieldName", { length: 64 }).notNull(),
-  evidenceIdsJson: text("evidenceIdsJson"),
-  currentValue: text("currentValue"),
-  candidateValuesJson: text("candidateValuesJson"),
-  recommendedEvidenceId: int("recommendedEvidenceId"),
-  recommendedReason: text("recommendedReason"),
-  resolutionStatus: mysqlEnum("resolutionStatus", ["open", "suggested", "resolved", "ignored"]).default("open").notNull(),
-  resolutionMethod: mysqlEnum("resolutionMethod", ["manual", "source_priority", "newest_verified", "weighted_score", "rule_based"]),
-  resolvedValue: text("resolvedValue"),
-  resolvedEvidenceId: int("resolvedEvidenceId"),
-  resolvedBy: varchar("resolvedBy", { length: 64 }),
-  resolvedAt: timestamp("resolvedAt"),
-  createdAt: timestamp("dcCreatedAt").defaultNow().notNull(),
-  updatedAt: timestamp("dcUpdatedAt").defaultNow().onUpdateNow().notNull(),
-});
-export type DataConflictRow = typeof dataConflicts.$inferSelect;
-
-/** ä¼ä¸šèº«ä»½åˆ«å */
-export const entityAliases = mysqlTable("entityAliases", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  eid: varchar("eaEid", { length: 16 }).notNull(),
-  aliasType: mysqlEnum("aliasType", ["legal_name", "former_name", "brand_name", "uscc", "domain", "phone", "address", "contract_name", "other"]).notNull(),
-  aliasValue: varchar("aliasValue", { length: 255 }).notNull(),
-  normalizedValue: varchar("eaNormalizedValue", { length: 255 }),
-  sourceId: int("eaSourceId"),
-  verified: int("eaVerified").default(0).notNull(),
-  createdAt: timestamp("eaCreatedAt").defaultNow().notNull(),
-});
-export type EntityAliasRow = typeof entityAliases.$inferSelect;
-
-/** æ¥æºå­—æ®µç­–ç•¥ */
-export const sourceFieldPolicies = mysqlTable("sourceFieldPolicies", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  fieldName: varchar("sfpFieldName", { length: 64 }).notNull(),
-  sourceCategory: varchar("sourceCategory", { length: 32 }).notNull(),
-  priority: int("sfpPriority").default(50).notNull(),
-  maxAgeDays: int("maxAgeDays").default(180).notNull(),
-  requiresVerification: int("requiresVerification").default(0).notNull(),
-  allowAutoApply: int("allowAutoApply").default(0).notNull(),
-  notes: text("sfpNotes"),
-  updatedAt: timestamp("sfpUpdatedAt").defaultNow().onUpdateNow().notNull(),
-});
-export type SourceFieldPolicyRow = typeof sourceFieldPolicies.$inferSelect;
-
-/** å†³ç­–-è¯æ®å…³è” */
-export const decisionEvidenceLinks = mysqlTable("decisionEvidenceLinks", {
-  id: int("id").autoincrement().primaryKey(),
-  decisionId: int("delDecisionId").notNull(),
-  evidenceId: int("delEvidenceId").notNull(),
-  role: mysqlEnum("delRole", ["trigger", "support", "counter_evidence"]).default("support").notNull(),
-  createdAt: timestamp("delCreatedAt").defaultNow().notNull(),
-});
-export type DecisionEvidenceLinkRow = typeof decisionEvidenceLinks.$inferSelect;
-
-/* ============================================================
- * è¿­ä»£22 Â· å·¥å•9 Â· å­¦ä¹ å¼•æ“Žï¼ˆCap-08ï¼‰
- * scoreModelsï¼šè¯„åˆ†æ¨¡åž‹ç‰ˆæœ¬ï¼ˆchampion åœ¨çº¿ / challenger å€™é€‰ï¼‰
- * - weightsJsonï¼š12 ç»´æƒé‡å¿«ç…§ï¼›backtestJsonï¼šå›žæµ‹å¯¹ç…§ç»“æžœï¼›lineageJsonï¼šè¡€ç¼˜ï¼ˆè®­ç»ƒæ•°æ®çª—å£/æ ·æœ¬é‡/ç”Ÿæˆæ–¹æ³•ï¼‰
- * - çŠ¶æ€æœºï¼šchallengerï¼ˆå€™é€‰ï¼‰â†’ promotedï¼ˆäººå®¡æ™‹å‡ä¸º championï¼‰/ archivedï¼ˆæ·˜æ±°ï¼‰
- * - ç¡¬çº¦æŸï¼šä¸å¾—è‡ªåŠ¨ä¸Šçº¿â€”â€”promote å¿…é¡»ç®¡ç†å‘˜æ˜¾å¼æ“ä½œï¼Œå†™ ruleConfigs æ–°ç‰ˆæœ¬ï¼ˆå¯å›žæ»šï¼‰
- * ============================================================ */
-export const scoreModels = mysqlTable("scoreModels", {
-  id: int("id").autoincrement().primaryKey(),
-  tenantId: varchar("tenantId", { length: 32 }).default("uestc").notNull(),
-  modelKey: varchar("modelKey", { length: 64 }).notNull().unique(), // å¦‚ challenger-2026W31-1
-  role: mysqlEnum("role", ["champion", "challenger", "archived"]).default("challenger").notNull(),
-  weightsJson: text("weightsJson").notNull(),
-  backtestJson: text("backtestJson"),
-  lineageJson: text("lineageJson").notNull(),
-  explanation: text("explanation"), // å¯è§£é‡Šè¯´æ˜Žï¼šæ¯ä¸ªæƒé‡è°ƒæ•´çš„åŽŸå› ï¼ˆäººè¯ï¼‰
-  promotedAt: timestamp("promotedAt"),
-  promotedBy: varchar("promotedBy", { length: 64 }),
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
-export type ScoreModelRow = typeof scoreModels.$inferSelect;
+  createdÛm=¶‰žËkºwµçsžNG¦ZüÿžBoŽ—’ò§žJšvÿžÚ7¦Rlü(€¨Ý½É­™±½ÝQ…Í­Ï¦RošÂ¯šÆ'–ºãŽ“š6‹¦6SŠbžÒeM1ƒžJŠš’€¬ƒžNK–F»š’¦6_–n§¦ª¦Rlü(€¨€ôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôô€¨¼)•áÁ½ÉÐ½¹ÍÐÝ½É­™±½Ý•™Ì€ôµåÍÅ±Q…‰±” ‰Ý½É­™±½Ý•™Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€‘•™-•äèÙ…É¡…È ‰‘•™-•äˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤¹Õ¹¥ÅÕ” ¤°(€¹…µ”èÙ…É¡…È ‰¹…µ”ˆ°ì±•¹Ñ è€ÄÈàô¤¹¹½Ñ9Õ±° ¤°(€‘•¥Í¥½¹QåÁ”èÙ…É¡…È ‰‘•¥Í¥½¹QåÁ”ˆ°ì±•¹Ñ è€ÌÈô¤°€¼¼ƒžòš"wžVû¦6C–ÒžN—žî¯¢¾Ëžß¦Ro–v!½¹Ñ…Ð½µ•¹Ñ½È¼¸¸»¦Ro–ÊŠRX÷¦Z¯šÂÇšV“¦Rlü(€ÍÑ•ÁÍ)Í½¸èÑ•áÐ ‰ÍÑ•ÁÍ)Í½¸ˆ¤¹¹½Ñ9Õ±° ¤°(€…Ñ¥Ù”è¥¹Ð ‰…Ñ¥Ù”ˆ¤¹‘•™…Õ±Ð Ä¤¹¹½Ñ9Õ±° ¤°(€Ù•ÉÍ¥½¸è¥¹Ð ‰Ù•ÉÍ¥½¸ˆ¤¹‘•™…Õ±Ð Ä¤¹¹½Ñ9Õ±° ¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”]½É­™±½Ý•™I½Ü€ôÑåÁ•½˜Ý½É­™±½Ý•™Ì¸‘¥¹™•ÉM•±•Ðì()•áÁ½ÉÐ½¹ÍÐÝ½É­™±½Ý%¹ÍÑ…¹•Ì€ôµåÍÅ±Q…‰±” ‰Ý½É­™±½Ý%¹ÍÑ…¹•Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€‘•™-•äèÙ…É¡…È ‰‘•™-•äˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤°(€‘•¥Í¥½¹%è¥¹Ð ‰‘•¥Í¥½¹%ˆ¤°(€•¥èÙ…É¡…È ‰•¥ˆ°ì±•¹Ñ è€ÄØô¤°(€ÍÑ…ÑÕÌèµåÍÅ±¹Õ´ ‰ÍÑ…ÑÕÌˆ°l‰ÉÕ¹¹¥¹œˆ°€‰‘½¹”ˆ°€‰™…¥±•ˆ°€‰½µÁ•¹Í…Ñ•‰t¤¹‘•™…Õ±Ð ‰ÉÕ¹¹¥¹œˆ¤¹¹½Ñ9Õ±° ¤°(€ÕÉÉ•¹ÑMÑ•Àè¥¹Ð ‰ÕÉÉ•¹ÑMÑ•Àˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€ÍÑ•ÁMÑ…Ñ•Í)Í½¸èÑ•áÐ ‰ÍÑ•ÁMÑ…Ñ•Í)Í½¸ˆ¤¹¹½Ñ9Õ±° ¤°(€ÍÑ…ÉÑ•‘	äèÙ…É¡…È ‰ÍÑ…ÉÑ•‘	äˆ°ì±•¹Ñ è€ØÐô¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°(€ÕÁ‘…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰ÕÁ‘…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹½¹UÁ‘…Ñ•9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”]½É­™±½Ý%¹ÍÑ…¹•I½Ü€ôÑåÁ•½˜Ý½É­™±½Ý%¹ÍÑ…¹•Ì¸‘¥¹™•ÉM•±•Ðì()•áÁ½ÉÐ½¹ÍÐÝ½É­™±½ÝQ…Í­Ì€ôµåÍÅ±Q…‰±” ‰Ý½É­™±½ÝQ…Í­Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€¥¹ÍÑ…¹•%è¥¹Ð ‰¥¹ÍÑ…¹•%ˆ¤¹¹½Ñ9Õ±° ¤°(€ÍÑ•Á%¹‘•àè¥¹Ð ‰ÍÑ•Á%¹‘•àˆ¤¹¹½Ñ9Õ±° ¤°(€Ñ¥Ñ±”èÙ…É¡…È ‰Ñ¥Ñ±”ˆ°ì±•¹Ñ è€ÈÔÔô¤¹¹½Ñ9Õ±° ¤°(€…ÍÍ¥¹•”èÙ…É¡…È ‰…ÍÍ¥¹•”ˆ°ì±•¹Ñ è€ØÐô¤°(€ÍÑ…ÑÕÌèµåÍÅ±¹Õ´ ‰ÍÑ…ÑÕÌˆ°l‰½Á•¸ˆ°€‰‘½¹”ˆ°€‰•Í…±…Ñ•ˆ°€‰…¹•±±•‰t¤¹‘•™…Õ±Ð ‰½Á•¸ˆ¤¹¹½Ñ9Õ±° ¤°(€Í±…!½ÕÉÌè¥¹Ð ‰Í±…!½ÕÉÌˆ¤¹‘•™…Õ±Ð ÜÈ¤¹¹½Ñ9Õ±° ¤°(€‘Õ•ÐèÑ¥µ•ÍÑ…µÀ ‰‘Õ•Ðˆ¤°(€•Í…±…Ñ•‘Q¼èÙ…É¡…È ‰•Í…±…Ñ•‘Q¼ˆ°ì±•¹Ñ è€ØÐô¤°(€‘½¹•ÐèÑ¥µ•ÍÑ…µÀ ‰‘½¹•Ðˆ¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”]½É­™±½ÝQ…Í­I½Ü€ôÑåÁ•½˜Ý½É­™±½ÝQ…Í­Ì¸‘¥¹™•ÉM•±•Ðì((¼¨€ôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôô(€¨ƒšv§ºw–R°Èàƒ¢Þ¼ƒ¦>ž&#–Ö¦>'Ž›žÂ»šÚO–ê“žb'¦:çº÷’â7¦B{–^g¦Óžòü(€¨‘…Ñ…M½ÕÉ•Ì€¼¥¹•ÍÑ¥½¹	…Ñ¡•Ì€¼•Ù¥‘•¹•I•½É‘Ì€¼‘…Ñ…½¹™±¥ÑÌ(€¨•¹Ñ¥Ñå±¥…Í•Ì€¼Í½ÕÉ•¥•±‘A½±¥¥•Ì€¼‘•¥Í¥½¹Ù¥‘•¹•1¥¹­Ì(€¨€ôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôô€¨¼((¼¨¨ƒ¦>ž&#–Ö¦>'Ž›žÂ»¦B§ºóžÚ4€¨¼)•áÁ½ÉÐ½¹ÍÐ‘…Ñ…M½ÕÉ•Ì€ôµåÍÅ±Q…‰±” ‰‘…Ñ…M½ÕÉ•Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€Í½ÕÉ•-•äèÙ…É¡…È ‰Í½ÕÉ•-•äˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤¹Õ¹¥ÅÕ” ¤°(€¹…µ”èÙ…É¡…È ‰¹…µ”ˆ°ì±•¹Ñ è€ÄÈàô¤¹¹½Ñ9Õ±° ¤°(€…Ñ•½ÉäèµåÍÅ±¹Õ´ ‰…Ñ•½Éäˆ°l‰½Ù•É¹µ•¹Ðˆ°€‰½µÁ…¹å}½™™¥¥…°ˆ°€‰½µµ•É¥…±}‘…Ñ…‰…Í”ˆ°€‰É•ÉÕ¥Ñµ•¹Ðˆ°€‰µ•‘¥„ˆ°€‰Á…É­}¥¹Ñ•É¹…°ˆ°€‰™¥•±‘}Ù¥Í¥Ðˆ°€‰•¹Ñ•ÉÁÉ¥Í•}ÍÕ‰µ¥ÍÍ¥½¸ˆ°€‰½Ñ¡•È‰t¤¹¹½Ñ9Õ±° ¤°(€ÁÉ½Ù¥‘•ÈèÙ…É¡…È ‰ÁÉ½Ù¥‘•Èˆ°ì±•¹Ñ è€ÄÈàô¤°(€…ÅÕ¥Í¥Ñ¥½¹¡…¹¹•°èµåÍÅ±¹Õ´ ‰…ÅÕ¥Í¥Ñ¥½¹¡…¹¹•°ˆ°l‰µ…¹Õ…±}Á…ÍÑ”ˆ°€‰•á•°ˆ°€‰…Á¤ˆ°€‰™½É´ˆ°€‰ÍåÍÑ•µ}Íå¹Œˆ°€‰™¥±•}ÕÁ±½…ˆ°€‰•µ…¥°ˆ°€‰½Ñ¡•È‰t¤¹‘•™…Õ±Ð ‰½Ñ¡•Èˆ¤¹¹½Ñ9Õ±° ¤°(€Í½ÕÉ•M½Á”èÙ…É¡…È ‰Í½ÕÉ•M½Á”ˆ°ì±•¹Ñ è€ÈÔÔô¤°(€¡½µ•Á…•UÉ°èÙ…É¡…È ‰¡½µ•Á…•UÉ°ˆ°ì±•¹Ñ è€ÔÄÈô¤°(€½Ý¹•É•Á…ÉÑµ•¹ÐèÙ…É¡…È ‰½Ý¹•É•Á…ÉÑµ•¹Ðˆ°ì±•¹Ñ è€ØÐô¤°(€½Ý¹•É9…µ”èÙ…É¡…È ‰½Ý¹•É9…µ”ˆ°ì±•¹Ñ è€ØÐô¤°(€…ÕÑ¡½É¥é…Ñ¥½¹QåÁ”èµåÍÅ±¹Õ´ ‰…ÕÑ¡½É¥é…Ñ¥½¹QåÁ”ˆ°l‰ÁÕ‰±¥Œˆ°€‰ÕÍ•É}ÁÉ½Ù¥‘•ˆ°€‰½¹ÑÉ…ÑÕ…°ˆ°€‰¥¹Ñ•É¹…°ˆ°€‰Õ¹­¹½Ý¸‰t¤¹‘•™…Õ±Ð ‰Õ¹­¹½Ý¸ˆ¤¹¹½Ñ9Õ±° ¤°(€…ÕÑ¡½É¥é…Ñ¥½¹9½Ñ”èÑ•áÐ ‰…ÕÑ¡½É¥é…Ñ¥½¹9½Ñ”ˆ¤°(€É•™É•Í¡5½‘”èµåÍÅ±¹Õ´ ‰É•™É•Í¡5½‘”ˆ°l‰½¹•}Ñ¥µ”ˆ°€‰µ…¹Õ…°ˆ°€‰Í¡•‘Õ±•ˆ°€‰•Ù•¹Ñ}‘É¥Ù•¸‰t¤¹‘•™…Õ±Ð ‰µ…¹Õ…°ˆ¤¹¹½Ñ9Õ±° ¤°(€É•™É•Í¡É•ÅÕ•¹äèÙ…É¡…È ‰É•™É•Í¡É•ÅÕ•¹äˆ°ì±•¹Ñ è€ÌÈô¤°(€É•±¥…‰¥±¥Ñå1•Ù•°èµåÍÅ±¹Õ´ ‰É•±¥…‰¥±¥Ñå1•Ù•°ˆ°l‰ˆ°€‰ˆ°€‰ˆ°€‰ˆ°€‰Õ¹É…‘•‰t¤¹‘•™…Õ±Ð ‰Õ¹É…‘•ˆ¤¹¹½Ñ9Õ±° ¤°(€Í•¹Í¥Ñ¥Ù¥Ñå1•Ù•°èÙ…É¡…È ‰Í•¹Í¥Ñ¥Ù¥Ñå1•Ù•°ˆ°ì±•¹Ñ è€ÄØô¤°(€ÍÑ…ÑÕÌèµåÍÅ±¹Õ´ ‰‘ÍMÑ…ÑÕÌˆ°l‰…Ñ¥Ù”ˆ°€‰Á…ÕÍ•ˆ°€‰Á±…¹¹•ˆ°€‰É•Ñ¥É•‰t¤¹‘•™…Õ±Ð ‰…Ñ¥Ù”ˆ¤¹¹½Ñ9Õ±° ¤°(€±…ÍÑMÕ•ÍÍ™Õ±Må¹ÐèÑ¥µ•ÍÑ…µÀ ‰±…ÍÑMÕ•ÍÍ™Õ±Må¹Ðˆ¤°(€±…ÍÑ…¥±•‘Må¹ÐèÑ¥µ•ÍÑ…µÀ ‰±…ÍÑ…¥±•‘Må¹Ðˆ¤°(€±…ÍÑ…¥±ÕÉ•I•…Í½¸èÑ•áÐ ‰±…ÍÑ…¥±ÕÉ•I•…Í½¸ˆ¤°(€É•…Ñ•‘	äèÙ…É¡…È ‰É•…Ñ•‘	äˆ°ì±•¹Ñ è€ØÐô¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°(€ÕÁ‘…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰ÕÁ‘…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹½¹UÁ‘…Ñ•9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”…Ñ…M½ÕÉ•I½Ü€ôÑåÁ•½˜‘…Ñ…M½ÕÉ•Ì¸‘¥¹™•ÉM•±•Ðì((¼¨¨ƒ¦>ž&#–Ö¦6?Ž—žÂÇ¦:×¢žº
+ð€¨¼)•áÁ½ÉÐ½¹ÍÐ¥¹•ÍÑ¥½¹	…Ñ¡•Ì€ôµåÍÅ±Q…‰±” ‰¥¹•ÍÑ¥½¹	…Ñ¡•Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€‰…Ñ¡-•äèÙ…É¡…È ‰‰…Ñ¡-•äˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤¹Õ¹¥ÅÕ” ¤°(€Í½ÕÉ•%è¥¹Ð ‰Í½ÕÉ•%ˆ¤¹¹½Ñ9Õ±° ¤°(€…ÅÕ¥Í¥Ñ¥½¹¡…¹¹•°èµåÍÅ±¹Õ´ ‰¥‰Å¡…¹¹•°ˆ°l‰µ…¹Õ…±}Á…ÍÑ”ˆ°€‰•á•°ˆ°€‰…Á¤ˆ°€‰™½É´ˆ°€‰ÍåÍÑ•µ}Íå¹Œˆ°€‰™¥±•}ÕÁ±½…ˆ°€‰•µ…¥°ˆ°€‰½Ñ¡•È‰t¤¹‘•™…Õ±Ð ‰•á•°ˆ¤¹¹½Ñ9Õ±° ¤°(€ÁÉ½•ÍÍ¥¹5•Ñ¡½èµåÍÅ±¹Õ´ ‰ÁÉ½•ÍÍ¥¹5•Ñ¡½ˆ°l‰…¥}•áÑÉ…Ðˆ°€‰ÉÕ±•}Á…ÉÍ”ˆ°€‰‘¥É•Ñ}µ…ÁÁ¥¹œˆ°€‰µ…¹Õ…±}•¹ÑÉäˆ°€‰½¹¹•Ñ½É}Íå¹Œ‰t¤¹‘•™…Õ±Ð ‰‘¥É•Ñ}µ…ÁÁ¥¹œˆ¤¹¹½Ñ9Õ±° ¤°(€½É¥¥¹…±¥±•9…µ”èÙ…É¡…È ‰½É¥¥¹…±¥±•9…µ”ˆ°ì±•¹Ñ è€ÈÔÔô¤°(€½É¥¥¹…±¥±•UÉ°èÙ…É¡…È ‰½É¥¥¹…±¥±•UÉ°ˆ°ì±•¹Ñ è€ÔÄÈô¤°(€½É¥¥¹…±A…•UÉ°èÙ…É¡…È ‰½É¥¥¹…±A…•UÉ°ˆ°ì±•¹Ñ è€ÔÄÈô¤°(€½±±•Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰½±±•Ñ•‘Ðˆ¤°(€•™™•Ñ¥Ù•ÐèÑ¥µ•ÍÑ…µÀ ‰•™™•Ñ¥Ù•Ðˆ¤°(€•áÁ¥É•ÍÐèÑ¥µ•ÍÑ…µÀ ‰•áÁ¥É•ÍÐˆ¤°(€ÍÑ…ÑÕÌèµåÍÅ±¹Õ´ ‰¥‰MÑ…ÑÕÌˆ°l‰‘É…™Ðˆ°€‰Á…ÉÍ¥¹œˆ°€‰É•Ù¥•Üˆ°€‰½µµ¥ÑÑ•ˆ°€‰™…¥±•ˆ°€‰É½±±•‘}‰…¬‰t¤¹‘•™…Õ±Ð ‰‘É…™Ðˆ¤¹¹½Ñ9Õ±° ¤°(€Ñ½Ñ…±I•½É‘Ìè¥¹Ð ‰Ñ½Ñ…±I•½É‘Ìˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€µ…Ñ¡•‘I•½É‘Ìè¥¹Ð ‰µ…Ñ¡•‘I•½É‘Ìˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€É•…Ñ•‘I•½É‘Ìè¥¹Ð ‰É•…Ñ•‘I•½É‘Ìˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€ÕÁ‘…Ñ•‘I•½É‘Ìè¥¹Ð ‰ÕÁ‘…Ñ•‘I•½É‘Ìˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€½¹™±¥ÑI•½É‘Ìè¥¹Ð ‰½¹™±¥ÑI•½É‘Ìˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€™…¥±•‘I•½É‘Ìè¥¹Ð ‰™…¥±•‘I•½É‘Ìˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€…Ñ½ÈèÙ…É¡…È ‰¥‰Ñ½Èˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤°(€¹½Ñ•ÌèÑ•áÐ ‰¥‰9½Ñ•Ìˆ¤°(€‰•™½É•M¹…ÁÍ¡½Ñ)Í½¸èÑ•áÐ ‰‰•™½É•M¹…ÁÍ¡½Ñ)Í½¸ˆ¤°(€…™Ñ•ÉM¹…ÁÍ¡½Ñ)Í½¸èÑ•áÐ ‰…™Ñ•ÉM¹…ÁÍ¡½Ñ)Í½¸ˆ¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰¥‰É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°(€½µÁ±•Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰½µÁ±•Ñ•‘Ðˆ¤°(€É½±±•‘	…­ÐèÑ¥µ•ÍÑ…µÀ ‰É½±±•‘	…­Ðˆ¤°(€É½±±•‘	…­	äèÙ…É¡…È ‰É½±±•‘	…­	äˆ°ì±•¹Ñ è€ØÐô¤°)ô¤ì)•áÁ½ÉÐÑåÁ”%¹•ÍÑ¥½¹	…Ñ¡I½Ü€ôÑåÁ•½˜¥¹•ÍÑ¥½¹	…Ñ¡•Ì¸‘¥¹™•ÉM•±•Ðì((¼¨¨ƒžoš–º3žîûFžb'¦:äü¨¼)•áÁ½ÉÐ½¹ÍÐ•Ù¥‘•¹•I•½É‘Ì€ôµåÍÅ±Q…‰±” ‰•Ù¥‘•¹•I•½É‘Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€•Ù¥‘•¹•-•äèÙ…É¡…È ‰•Ù¥‘•¹•-•äˆ°ì±•¹Ñ è€ÄÈàô¤¹¹½Ñ9Õ±° ¤¹Õ¹¥ÅÕ” ¤°(€•¥èÙ…É¡…È ‰•¥ˆ°ì±•¹Ñ è€ÄØô¤¹¹½Ñ9Õ±° ¤°(€™¥•±‘9…µ”èÙ…É¡…È ‰™¥•±‘9…µ”ˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤°(€¹½Éµ…±¥é•‘Y…±Õ”èÑ•áÐ ‰¹½Éµ…±¥é•‘Y…±Õ”ˆ¤°(€½É¥¥¹…±Y…±Õ”èÑ•áÐ ‰½É¥¥¹…±Y…±Õ”ˆ¤°(€Ù…±Õ•QåÁ”èÙ…É¡…È ‰Ù…±Õ•QåÁ”ˆ°ì±•¹Ñ è€ÄØô¤°(€Í½ÕÉ•%è¥¹Ð ‰Í½ÕÉ•%ˆ¤¹¹½Ñ9Õ±° ¤°(€‰…Ñ¡%è¥¹Ð ‰‰…Ñ¡%ˆ¤¹¹½Ñ9Õ±° ¤°(€Í½ÕÉ•I•½É‘-•äèÙ…É¡…È ‰Í½ÕÉ•I•½É‘-•äˆ°ì±•¹Ñ è€ÄÈàô¤°(€•Ù¥‘•¹•á•ÉÁÐèÑ•áÐ ‰•Ù¥‘•¹•á•ÉÁÐˆ¤°(€•Ù¥‘•¹•1½…Ñ¥½¸èÙ…É¡…È ‰•Ù¥‘•¹•1½…Ñ¥½¸ˆ°ì±•¹Ñ è€ÄÈàô¤°(€½É¥¥¹…±UÉ°èÙ…É¡…È ‰½É¥¥¹…±UÉ°ˆ°ì±•¹Ñ è€ÔÄÈô¤°(€½É¥¥¹…±¥±•9…µ”èÙ…É¡…È ‰•É=É¥¥¹…±¥±•9…µ”ˆ°ì±•¹Ñ è€ÈÔÔô¤°(€½±±•Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰•É½±±•Ñ•‘Ðˆ¤°(€•™™•Ñ¥Ù•ÐèÑ¥µ•ÍÑ…µÀ ‰•É™™•Ñ¥Ù•Ðˆ¤°(€•áÁ¥É•ÍÐèÑ¥µ•ÍÑ…µÀ ‰•ÉáÁ¥É•ÍÐˆ¤°(€½¹™¥‘•¹•M½É”è¥¹Ð ‰½¹™¥‘•¹•M½É”ˆ¤°(€½¹™¥‘•¹•1…‰•°èµåÍÅ±¹Õ´ ‰½¹™¥‘•¹•1…‰•°ˆ°l‰¡¥ ˆ°€‰µ•‘¥Õ´ˆ°€‰±½Üˆ°€‰Õ¹­¹½Ý¸‰t¤¹‘•™…Õ±Ð ‰Õ¹­¹½Ý¸ˆ¤¹¹½Ñ9Õ±° ¤°(€Ù•É¥™¥…Ñ¥½¹MÑ…ÑÕÌèµåÍÅ±¹Õ´ ‰Ù•É¥™¥…Ñ¥½¹MÑ…ÑÕÌˆ°l‰Á•¹‘¥¹œˆ°€‰Ù•É¥™¥•ˆ°€‰‘¥ÍÁÕÑ•ˆ°€‰É•©•Ñ•ˆ°€‰•áÁ¥É•‰t¤¹‘•™…Õ±Ð ‰Á•¹‘¥¹œˆ¤¹¹½Ñ9Õ±° ¤°(€Ù•É¥™¥•‘	äèÙ…É¡…È ‰•ÉY•É¥™¥•‘	äˆ°ì±•¹Ñ è€ØÐô¤°(€Ù•É¥™¥•‘ÐèÑ¥µ•ÍÑ…µÀ ‰•ÉY•É¥™¥•‘Ðˆ¤°(€ÁÉ½•ÍÍ¥¹5•Ñ¡½èÙ…É¡…È ‰•ÉAÉ½•ÍÍ¥¹5•Ñ¡½ˆ°ì±•¹Ñ è€ÌÈô¤°(€µ½‘•±9…µ”èÙ…É¡…È ‰µ½‘•±9…µ”ˆ°ì±•¹Ñ è€ØÐô¤°(€µ½‘•±Y•ÉÍ¥½¸èÙ…É¡…È ‰µ½‘•±Y•ÉÍ¥½¸ˆ°ì±•¹Ñ è€ÌÈô¤°(€ÑÉ…¹Í™½Éµ…Ñ¥½¹IÕ±”èÙ…É¡…È ‰ÑÉ…¹Í™½Éµ…Ñ¥½¹IÕ±”ˆ°ì±•¹Ñ è€ÄÈàô¤°(€É•±¥…‰¥±¥ÑåM½É”è¥¹Ð ‰É•±¥…‰¥±¥ÑåM½É”ˆ¤°(€¥ÍÕÉÉ•¹Ðè¥¹Ð ‰¥ÍÕÉÉ•¹Ðˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€ÍÕÁ•ÉÍ•‘•‘	åÙ¥‘•¹•%è¥¹Ð ‰ÍÕÁ•ÉÍ•‘•‘	åÙ¥‘•¹•%ˆ¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰•ÉÉ•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”Ù¥‘•¹•I•½É‘I½Ü€ôÑåÁ•½˜•Ù¥‘•¹•I•½É‘Ì¸‘¥¹™•ÉM•±•Ðì((¼¨¨ƒ¦>ž&#–Ö¦6C¢2³ž6(€¨¼)•áÁ½ÉÐ½¹ÍÐ‘…Ñ…½¹™±¥ÑÌ€ôµåÍÅ±Q…‰±” ‰‘…Ñ…½¹™±¥ÑÌˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€½¹™±¥Ñ-•äèÙ…É¡…È ‰½¹™±¥Ñ-•äˆ°ì±•¹Ñ è€ÄÈàô¤¹¹½Ñ9Õ±° ¤¹Õ¹¥ÅÕ” ¤°(€•¥èÙ…É¡…È ‰‘¥ˆ°ì±•¹Ñ è€ÄØô¤¹¹½Ñ9Õ±° ¤°(€™¥•±‘9…µ”èÙ…É¡…È ‰‘¥•±‘9…µ”ˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤°(€•Ù¥‘•¹•%‘Í)Í½¸èÑ•áÐ ‰•Ù¥‘•¹•%‘Í)Í½¸ˆ¤°(€ÕÉÉ•¹ÑY…±Õ”èÑ•áÐ ‰ÕÉÉ•¹ÑY…±Õ”ˆ¤°(€…¹‘¥‘…Ñ•Y…±Õ•Í)Í½¸èÑ•áÐ ‰…¹‘¥‘…Ñ•Y…±Õ•Í)Í½¸ˆ¤°(€É•½µµ•¹‘•‘Ù¥‘•¹•%è¥¹Ð ‰É•½µµ•¹‘•‘Ù¥‘•¹•%ˆ¤°(€É•½µµ•¹‘•‘I•…Í½¸èÑ•áÐ ‰É•½µµ•¹‘•‘I•…Í½¸ˆ¤°(€É•Í½±ÕÑ¥½¹MÑ…ÑÕÌèµåÍÅ±¹Õ´ ‰É•Í½±ÕÑ¥½¹MÑ…ÑÕÌˆ°l‰½Á•¸ˆ°€‰ÍÕ•ÍÑ•ˆ°€‰É•Í½±Ù•ˆ°€‰¥¹½É•‰t¤¹‘•™…Õ±Ð ‰½Á•¸ˆ¤¹¹½Ñ9Õ±° ¤°(€É•Í½±ÕÑ¥½¹5•Ñ¡½èµåÍÅ±¹Õ´ ‰É•Í½±ÕÑ¥½¹5•Ñ¡½ˆ°l‰µ…¹Õ…°ˆ°€‰Í½ÕÉ•}ÁÉ¥½É¥Ñäˆ°€‰¹•Ý•ÍÑ}Ù•É¥™¥•ˆ°€‰Ý•¥¡Ñ•‘}Í½É”ˆ°€‰ÉÕ±•}‰…Í•‰t¤°(€É•Í½±Ù•‘Y…±Õ”èÑ•áÐ ‰É•Í½±Ù•‘Y…±Õ”ˆ¤°(€É•Í½±Ù•‘Ù¥‘•¹•%è¥¹Ð ‰É•Í½±Ù•‘Ù¥‘•¹•%ˆ¤°(€É•Í½±Ù•‘	äèÙ…É¡…È ‰É•Í½±Ù•‘	äˆ°ì±•¹Ñ è€ØÐô¤°(€É•Í½±Ù•‘ÐèÑ¥µ•ÍÑ…µÀ ‰É•Í½±Ù•‘Ðˆ¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰‘É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°(€ÕÁ‘…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰‘UÁ‘…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹½¹UÁ‘…Ñ•9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”…Ñ…½¹™±¥ÑI½Ü€ôÑåÁ•½˜‘…Ñ…½¹™±¥ÑÌ¸‘¥¹™•ÉM•±•Ðì((¼¨¨ƒšÖó’ößž²¦~³º
+‡–R“¦6Kº
+‹š
+T€¨¼)•áÁ½ÉÐ½¹ÍÐ•¹Ñ¥Ñå±¥…Í•Ì€ôµåÍÅ±Q…‰±” ‰•¹Ñ¥Ñå±¥…Í•Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€•¥èÙ…É¡…È ‰•…¥ˆ°ì±•¹Ñ è€ÄØô¤¹¹½Ñ9Õ±° ¤°(€…±¥…ÍQåÁ”èµåÍÅ±¹Õ´ ‰…±¥…ÍQåÁ”ˆ°l‰±•…±}¹…µ”ˆ°€‰™½Éµ•É}¹…µ”ˆ°€‰‰É…¹‘}¹…µ”ˆ°€‰ÕÍŒˆ°€‰‘½µ…¥¸ˆ°€‰Á¡½¹”ˆ°€‰…‘‘É•ÍÌˆ°€‰½¹ÑÉ…Ñ}¹…µ”ˆ°€‰½Ñ¡•È‰t¤¹¹½Ñ9Õ±° ¤°(€…±¥…ÍY…±Õ”èÙ…É¡…È ‰…±¥…ÍY…±Õ”ˆ°ì±•¹Ñ è€ÈÔÔô¤¹¹½Ñ9Õ±° ¤°(€¹½Éµ…±¥é•‘Y…±Õ”èÙ…É¡…È ‰•…9½Éµ…±¥é•‘Y…±Õ”ˆ°ì±•¹Ñ è€ÈÔÔô¤°(€Í½ÕÉ•%è¥¹Ð ‰•…M½ÕÉ•%ˆ¤°(€Ù•É¥™¥•è¥¹Ð ‰•…Y•É¥™¥•ˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰•…É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”¹Ñ¥Ñå±¥…ÍI½Ü€ôÑåÁ•½˜•¹Ñ¥Ñå±¥…Í•Ì¸‘¥¹™•ÉM•±•Ðì((¼¨¨ƒ¦>'Ž›žÂ»žoš–º3žîoš‚¯šj@€¨¼)•áÁ½ÉÐ½¹ÍÐÍ½ÕÉ•¥•±‘A½±¥¥•Ì€ôµåÍÅ±Q…‰±” ‰Í½ÕÉ•¥•±‘A½±¥¥•Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€™¥•±‘9…µ”èÙ…É¡…È ‰Í™Á¥•±‘9…µ”ˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤°(€Í½ÕÉ•…Ñ•½ÉäèÙ…É¡…È ‰Í½ÕÉ•…Ñ•½Éäˆ°ì±•¹Ñ è€ÌÈô¤¹¹½Ñ9Õ±° ¤°(€ÁÉ¥½É¥Ñäè¥¹Ð ‰Í™ÁAÉ¥½É¥Ñäˆ¤¹‘•™…Õ±Ð ÔÀ¤¹¹½Ñ9Õ±° ¤°(€µ…á•…åÌè¥¹Ð ‰µ…á•…åÌˆ¤¹‘•™…Õ±Ð ÄàÀ¤¹¹½Ñ9Õ±° ¤°(€É•ÅÕ¥É•ÍY•É¥™¥…Ñ¥½¸è¥¹Ð ‰É•ÅÕ¥É•ÍY•É¥™¥…Ñ¥½¸ˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€…±±½ÝÕÑ½ÁÁ±äè¥¹Ð ‰…±±½ÝÕÑ½ÁÁ±äˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€¹½Ñ•ÌèÑ•áÐ ‰Í™Á9½Ñ•Ìˆ¤°(€ÕÁ‘…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰Í™ÁUÁ‘…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹½¹UÁ‘…Ñ•9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”M½ÕÉ•¥•±‘A½±¥åI½Ü€ôÑåÁ•½˜Í½ÕÉ•¥•±‘A½±¥¥•Ì¸‘¥¹™•ÉM•±•Ðì((¼¨¨ƒ¦6C–ÒžN”·žJ’öç–Ö¦6?–ºƒ’î €¨¼)•áÁ½ÉÐ½¹ÍÐ‘•¥Í¥½¹Ù¥‘•¹•1¥¹­Ì€ôµåÍÅ±Q…‰±” ‰‘•¥Í¥½¹Ù¥‘•¹•1¥¹­Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€‘•¥Í¥½¹%è¥¹Ð ‰‘•±•¥Í¥½¹%ˆ¤¹¹½Ñ9Õ±° ¤°(€•Ù¥‘•¹•%è¥¹Ð ‰‘•±Ù¥‘•¹•%ˆ¤¹¹½Ñ9Õ±° ¤°(€É½±”èµåÍÅ±¹Õ´ ‰‘•±I½±”ˆ°l‰ÑÉ¥•Èˆ°€‰ÍÕÁÁ½ÉÐˆ°€‰½Õ¹Ñ•É}•Ù¥‘•¹”‰t¤¹‘•™…Õ±Ð ‰ÍÕÁÁ½ÉÐˆ¤¹¹½Ñ9Õ±° ¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰‘•±É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”•¥Í¥½¹Ù¥‘•¹•1¥¹­I½Ü€ôÑåÁ•½˜‘•¥Í¥½¹Ù¥‘•¹•1¥¹­Ì¸‘¥¹™•ÉM•±•Ðì((¼¨¨(€¨ƒžBo–Æóž²žFg–.¯–z¿–¾Ã–F·–žg¦RošÂ³žÚ/žòžÛž®Ó¦6?Ž—žÂÇ¦6gš"ƒ–æžBo–Æóž²¦6gº–cšÖ¢Þ£šV™…±±‰…¬ƒ¦>¢Þë–zÇ–¾“šKŠ
+°ü(€¨ƒšÖ€ýÑ•¹…¹Ñ%€¬ƒ¦6cžßºvCžBo–Æóž²¦>–n£šæÃ¦ª{–
+sžNG¦FÇšÂ³š
+;¦Ro–Æóž²'žFW–^gšÒ+šÖó’ößž²¦6cžßºvCžBo–Æóž²¦:Óš‚³žb'¦:çºëŠ
+°ü(€¨¼)•áÁ½ÉÐ½¹ÍÐ¥¹‘ÕÍÑÉåIÕ±•Q½‘½Ì€ôµåÍÅ±Q…‰±” ‰¥¹‘ÕÍÑÉåIÕ±•Q½‘½Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€Ñ½‘½-•äèÙ…É¡…È ‰Ñ½‘½-•äˆ°ì±•¹Ñ è€ÄäØô¤¹¹½Ñ9Õ±° ¤¹Õ¹¥ÅÕ” ¤°(€É…Ý%¹‘ÕÍÑÉäèÙ…É¡…È ‰É…Ý%¹‘ÕÍÑÉäˆ°ì±•¹Ñ è€ÄÈàô¤¹¹½Ñ9Õ±° ¤°(€™…±±‰…­M½É”è¥¹Ð ‰™…±±‰…­M½É”ˆ¤¹‘•™…Õ±Ð ÈÔ¤¹¹½Ñ9Õ±° ¤°(€•¹Ñ¥Ñå½Õ¹Ðè¥¹Ð ‰•¹Ñ¥Ñå½Õ¹Ðˆ¤¹‘•™…Õ±Ð À¤¹¹½Ñ9Õ±° ¤°(€Í…µÁ±•¥‘Í)Í½¸èÑ•áÐ ‰Í…µÁ±•¥‘Í)Í½¸ˆ¤°(€™¥ÉÍÑ	…Ñ¡%è¥¹Ð ‰™¥ÉÍÑ	…Ñ¡%ˆ¤°(€±…ÍÑ	…Ñ¡%è¥¹Ð ‰±…ÍÑ	…Ñ¡%ˆ¤°(€ÍÑ…ÑÕÌèµåÍÅ±¹Õ´ ‰ÍÑ…ÑÕÌˆ°l‰½Á•¸ˆ°€‰É•Í½±Ù•ˆ°€‰¥¹½É•‰t¤¹‘•™…Õ±Ð ‰½Á•¸ˆ¤¹¹½Ñ9Õ±° ¤°(€ÉÕ±•Y•ÉÍ¥½¸èÙ…É¡…È ‰ÉÕ±•Y•ÉÍ¥½¸ˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤°(€É•Í½±ÕÑ¥½¹9½Ñ”èÑ•áÐ ‰É•Í½±ÕÑ¥½¹9½Ñ”ˆ¤°(€É•Í½±Ù•‘	äèÙ…É¡…È ‰É•Í½±Ù•‘	äˆ°ì±•¹Ñ è€ØÐô¤°(€É•Í½±Ù•‘ÐèÑ¥µ•ÍÑ…µÀ ‰É•Í½±Ù•‘Ðˆ¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°(€ÕÁ‘…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰ÕÁ‘…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹½¹UÁ‘…Ñ•9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”%¹‘ÕÍÑÉåIÕ±•Q½‘½I½Ü€ôÑåÁ•½˜¥¹‘ÕÍÑÉåIÕ±•Q½‘½Ì¸‘¥¹™•ÉM•±•Ðì((¼¨€ôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôô(€¨ƒšv§ºw–R°ÈÈƒ¢Þ¼ƒ–ºãŽ—–Ò|äƒ¢Þ¼ƒžo¾âÿž¾–¾»šnšBã¦Ro–rU…À´Àã¦Rlü(€¨Í½É•5½‘•±Ï¦RošÂÏžb;¦6K–^c¦6£–²³–Š_¦>#º+žÒe¡…µÁ¥½¸ƒ¦6›ŽŸ–j8€¼¡…±±•¹•Èƒ¦6+š²OŠ
+³–’ožÒh(€¨€´Ý•¥¡ÑÍ)Í½»¦RlüÈƒžò–¶cšö#¦ZË–Úš>§¦BOF7žÒÅ‰…­Ñ•ÍÑ)Í½»¦RošÂ³šÒ[–¢Ó–²«º»¦BOFžÊ£¦>/šîCžÒÅ±¥¹•…•)Í½»¦RošÂÏºRžòš¦#žÒgžJºƒžÊ3¦>ž&#–ÖžîCš––öl¿¦>7¦R/šæÃ¦ZÈÿ¦B‹žã–zk¦>¢žž†Û¦Rlü(€¨€´ƒ¦Bc¢"×Š
+³’öçšê¦Roš¶u¡…±±•¹•Ë¦Ro–‚wŠ
+³š²OŠ
+³–’ožÒk¦"¬ýÁÉ½µ½Ñ•“¦Ro–‚sšÆ'žçŠšª×¦6_–n›¢Ò|¡…µÁ¥½»¦Rlü…É¡¥Ù•“¦Ro–‚žªC–žç–â»žÒh(€¨€´ƒžê·º–ºÏ¦>'žžÒÃšÚO–ÚžÞÇ¦Fßº–ž§šÚO–¦–j;¦"—šZëŠ
+³šREÉ½µ½Ñ”ƒ¢æ–FÓŽ?žîƒ¾òš
++¦6oš¢ïš¢'–¾»–þSšBßšÖšîCžÒw¦6@ýÉÕ±•½¹™¥Ìƒ¦>š&»–Š_¦>#º+žÒg¦6gº"kšÒ[–¦+šÂûžÒh(€¨€ôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôôô€¨¼)•áÁ½ÉÐ½¹ÍÐÍ½É•5½‘•±Ì€ôµåÍÅ±Q…‰±” ‰Í½É•5½‘•±Ìˆ°ì(€¥è¥¹Ð ‰¥ˆ¤¹…ÕÑ½¥¹É•µ•¹Ð ¤¹ÁÉ¥µ…Éå-•ä ¤°(€Ñ•¹…¹Ñ%èÙ…É¡…È ‰Ñ•¹…¹Ñ%ˆ°ì±•¹Ñ è€ÌÈô¤¹‘•™…Õ±Ð ‰Õ•ÍÑŒˆ¤¹¹½Ñ9Õ±° ¤°(€µ½‘•±-•äèÙ…É¡…È ‰µ½‘•±-•äˆ°ì±•¹Ñ è€ØÐô¤¹¹½Ñ9Õ±° ¤¹Õ¹¥ÅÕ” ¤°€¼¼ƒšþ„ý¡…±±•¹•È´ÈÀÈÙ\ÌÄ´Ä(€É½±”èµåÍÅ±¹Õ´ ‰É½±”ˆ°l‰¡…µÁ¥½¸ˆ°€‰¡…±±•¹•Èˆ°€‰…É¡¥Ù•‰t¤¹‘•™…Õ±Ð ‰¡…±±•¹•Èˆ¤¹¹½Ñ9Õ±° ¤°(€Ý•¥¡ÑÍ)Í½¸èÑ•áÐ ‰Ý•¥¡ÑÍ)Í½¸ˆ¤¹¹½Ñ9Õ±° ¤°(€‰…­Ñ•ÍÑ)Í½¸èÑ•áÐ ‰‰…­Ñ•ÍÑ)Í½¸ˆ¤°(€±¥¹•…•)Í½¸èÑ•áÐ ‰±¥¹•…•)Í½¸ˆ¤¹¹½Ñ9Õ±° ¤°(€•áÁ±…¹…Ñ¥½¸èÑ•áÐ ‰•áÁ±…¹…Ñ¥½¸ˆ¤°€¼¼ƒ¦6gº"wBK¦ZË–¦º§¦>–ê¿žÒÃ–ž–þ;¦s¦>'–»–fãžJ/–§šj¦B£–.¯–â¯¦6—ž.žÒgšÖs¦âÿžb÷¦Rlü(€ÁÉ½µ½Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰ÁÉ½µ½Ñ•‘Ðˆ¤°(€ÁÉ½µ½Ñ•‘	äèÙ…É¡…È ‰ÁÉ½µ½Ñ•‘	äˆ°ì±•¹Ñ è€ØÐô¤°(€É•…Ñ•‘ÐèÑ¥µ•ÍÑ…µÀ ‰É•…Ñ•‘Ðˆ¤¹‘•™…Õ±Ñ9½Ü ¤¹¹½Ñ9Õ±° ¤°)ô¤ì)•áÁ½ÉÐÑåÁ”M½É•5½‘•±I½Ü€ôÑåÁ•½˜Í½É•5½‘•±Ì¸‘¥¹™•ÉM•±•Ðì(

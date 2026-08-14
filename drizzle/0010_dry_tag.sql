@@ -1,0 +1,20 @@
+CREATE TABLE `industryRuleTodos` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`tenantId` varchar(32) NOT NULL DEFAULT 'uestc',
+	`todoKey` varchar(196) NOT NULL,
+	`rawIndustry` varchar(128) NOT NULL,
+	`fallbackScore` int NOT NULL DEFAULT 25,
+	`entityCount` int NOT NULL DEFAULT 0,
+	`sampleEidsJson` text,
+	`firstBatchId` int,
+	`lastBatchId` int,
+	`status` enum('open','resolved','ignored') NOT NULL DEFAULT 'open',
+	`ruleVersion` varchar(64) NOT NULL,
+	`resolutionNote` text,
+	`resolvedBy` varchar(64),
+	`resolvedAt` timestamp,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `industryRuleTodos_id` PRIMARY KEY(`id`),
+	CONSTRAINT `industryRuleTodos_todoKey_unique` UNIQUE(`todoKey`)
+);

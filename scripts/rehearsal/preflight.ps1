@@ -10,9 +10,11 @@ foreach ($command in @("mysql", "mysqldump", "node", "pnpm")) {
     }
 }
 
-$fixture = Join-Path $PSScriptRoot "../../deploy/rehearsal/fixture/synthetic.sql"
-if (-not (Test-Path -LiteralPath $fixture)) { throw "BLOCKED: deterministic synthetic fixture is missing" }
+$fixture = Join-Path $PSScriptRoot "../../deploy/rehearsal/fixture/production-like-synthetic.sql"
+if (-not (Test-Path -LiteralPath $fixture)) { throw "BLOCKED: production-like synthetic fixture is missing" }
 if ((Get-Item -LiteralPath $fixture).Length -eq 0) { throw "BLOCKED: synthetic fixture is empty" }
+$baseline = Join-Path $PSScriptRoot "../../deploy/rehearsal/canonical-baseline.contract.json"
+if (-not (Test-Path -LiteralPath $baseline)) { throw "BLOCKED: canonical baseline contract is missing" }
 
 $version = Invoke-RehearsalMysql -DatabaseUrl $DatabaseUrl -Query "SELECT VERSION();" -Raw
 if ($version -notmatch '^8\.') { throw "BLOCKED: MySQL 8 is required; found $version" }

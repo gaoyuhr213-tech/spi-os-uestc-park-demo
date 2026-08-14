@@ -1,0 +1,551 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "id": "5142539a-3ca9-4e70-b11f-458395b2f09c",
+  "prevId": "000ec8aa-e1cc-420c-8c08-e36137d1cae3",
+  "tables": {
+    "accessPolicies": {
+      "name": "accessPolicies",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "tenantId": {
+          "name": "tenantId",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'uestc'"
+        },
+        "role": {
+          "name": "role",
+          "type": "enum('user','admin')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fieldGroup": {
+          "name": "fieldGroup",
+          "type": "enum('public','business','sensitive','pii')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "effect": {
+          "name": "effect",
+          "type": "enum('allow','mask','deny')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "condition": {
+          "name": "condition",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updatedBy": {
+          "name": "updatedBy",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "accessPolicies_id": {
+          "name": "accessPolicies_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "connectors": {
+      "name": "connectors",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "tenantId": {
+          "name": "tenantId",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'uestc'"
+        },
+        "cid": {
+          "name": "cid",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ctype": {
+          "name": "ctype",
+          "type": "enum('manual','csv','paste','api')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "enum('active','planned','paused','error')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'planned'"
+        },
+        "source": {
+          "name": "source",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "configJson": {
+          "name": "configJson",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "lastRunAt": {
+          "name": "lastRunAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "connectors_id": {
+          "name": "connectors_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "connectors_cid_unique": {
+          "name": "connectors_cid_unique",
+          "columns": [
+            "cid"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "consents": {
+      "name": "consents",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "tenantId": {
+          "name": "tenantId",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'uestc'"
+        },
+        "eid": {
+          "name": "eid",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "scope": {
+          "name": "scope",
+          "type": "enum('contact_info','hr_data','finance_data','full_profile')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "enum('granted','revoked','expired')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'granted'"
+        },
+        "grantedBy": {
+          "name": "grantedBy",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "basis": {
+          "name": "basis",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "revokedAt": {
+          "name": "revokedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "revokedBy": {
+          "name": "revokedBy",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "consents_id": {
+          "name": "consents_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "dataConflicts": {
+      "name": "dataConflicts",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "tenantId": {
+          "name": "tenantId",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'uestc'"
+        },
+        "conflictKey": {
+          "name": "conflictKey",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "dcEid": {
+          "name": "dcEid",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "dcFieldName": {
+          "name": "dcFieldName",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "evidenceIdsJson": {
+          "name": "evidenceIdsJson",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "currentValue": {
+          "name": "currentValue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "candidateValuesJson": {
+          "name": "candidateValuesJson",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "recommendedEvidenceId": {
+          "name": "recommendedEvidenceId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "recommendedReason": {
+          "name": "recommendedReason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resolutionStatus": {
+          "name": "resolutionStatus",
+          "type": "enum('open','suggested','resolved','ignored')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'open'"
+        },
+        "resolutionMethod": {
+          "name": "resolutionMethod",
+          "type": "enum('manual','source_priority','newest_verified','weighted_score','rule_based')",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resolvedValue": {
+          "name": "resolvedValue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resolvedEvidenceId": {
+          "name": "resolvedEvidenceId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resolvedBy": {
+          "name": "resolvedBy",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resolvedAt": {
+          "name": "resolvedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "dcCreatedAt": {
+          "name": "dcCreatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
+        "dcUpdatedAt": {
+          "name": "dcUpdatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "onUpdate": true,
+          "default": "(now())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "dataConflicts_id": {
+          "name": "dataConflicts_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {
+        "dataConflicts_conflictKey_unique": {
+          "name": "dataConflicts_conflictKey_unique",
+          "columns": [
+            "conflictKey"
+          ]
+        }
+      },
+      "checkConstraint": {}
+    },
+    "dataSources": {
+      "name": "dataSources",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "tenantId": {
+          "name": "tenantId",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'uestc'"
+        },
+        "sourceKey": {
+          "name": "sourceKey",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "category": {
+          "name": "category",
+          "type": "enum('government','company_official','commercial_database','recruitment','media','park_internal','field_visit','enterprise_submission','other')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "acquisitionChannel": {
+          "name": "acquisitionChannel",
+          "type": "enum('manual_paste','excel','api','form','system_sync','file_upload','email','other')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'other'"
+        },
+        "sourceScope": {
+          "name": "sourceScope",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "homepageUrl": {
+          "name": "homepageUrl",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ownerDepartment": {
+          "name": "ownerDepartment",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ownerName": {
+          "name": "ownerName",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "authorizationType": {
+          "name": "authorizationType",
+          "type": "enum('public','user_provided','contractual','internal','unknown')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'unknown'"
+        },
+        "authorizationNote": {
+          "name": "authorizationNote",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "refreshMode": {
+          "name": "refreshMode",
+          "type": "enum('one_time','manual','scheduled','event_driven')",
+          "primaryKey": false×ßvÞÚ$z{-®éÜj×'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢Ð¢ÒÀ¢&–æFW†W2#¢·ÒÀ¢&f÷&V–vä¶W—2#¢·ÒÀ¢&6ö×÷6—FU&–Ö'”¶W—2#¢°¢'66÷&TÖöFVÇ5ö–B#¢°¢&æÖR#¢'66÷&TÖöFVÇ5ö–B"À¢&6öÇVÖç2#¢°¢&–B ¢Ð¢Ð¢ÒÀ¢'Væ—VT6öç7G&–çG2#¢°¢'66÷&TÖöFVÇ5öÖöFVÄ¶W•÷Væ—VR#¢°¢&æÖR#¢'66÷&TÖöFVÇ5öÖöFVÄ¶W•÷Væ—VR"À¢&6öÇVÖç2#¢°¢&ÖöFVÄ¶W’ ¢Ð¢Ð¢ÒÀ¢&6†V6´6öç7G&–çB#¢·Ð¢ÒÀ¢'6÷W&6Tf–VÆEöÆ–6–W2#¢°¢&æÖR#¢'6÷W&6Tf–VÆEöÆ–6–W2"À¢&6öÇVÖç2#¢°¢&–B#¢°¢&æÖR#¢&–B"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢G'VP¢ÒÀ¢'FVæçD–B#¢°¢&æÖR#¢'FVæçD–B"À¢'G—R#¢'f&6†"ƒ3"’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"wVW7F2r ¢ÒÀ¢'6gf–VÆDæÖR#¢°¢&æÖR#¢'6gf–VÆDæÖR"À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'6÷W&6T6FVv÷'’#¢°¢&æÖR#¢'6÷W&6T6FVv÷'’"À¢'G—R#¢'f&6†"ƒ3"’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'6g&–÷&—G’#¢°¢&æÖR#¢'6g&–÷&—G’"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢S ¢ÒÀ¢&Ö„vTF—2#¢°¢&æÖR#¢&Ö„vTF—2"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢ƒ ¢ÒÀ¢'&WV—&W5fW&–f–6F–öâ#¢°¢&æÖR#¢'&WV—&W5fW&–f–6F–öâ"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢ ¢ÒÀ¢&ÆÆ÷tWFôÇ’#¢°¢&æÖR#¢&ÆÆ÷tWFôÇ’"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢ ¢ÒÀ¢'6gæ÷FW2#¢°¢&æÖR#¢'6gæ÷FW2"À¢'G—R#¢'FW‡B"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'6gWFFVDB#¢°¢&æÖR#¢'6gWFFVDB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&öåWFFR#¢G'VRÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢Ð¢ÒÀ¢&–æFW†W2#¢·ÒÀ¢&f÷&V–vä¶W—2#¢·ÒÀ¢&6ö×÷6—FU&–Ö'”¶W—2#¢°¢'6÷W&6Tf–VÆEöÆ–6–W5ö–B#¢°¢&æÖR#¢'6÷W&6Tf–VÆEöÆ–6–W5ö–B"À¢&6öÇVÖç2#¢°¢&–B ¢Ð¢Ð¢ÒÀ¢'Væ—VT6öç7G&–çG2#¢·ÒÀ¢&6†V6´6öç7G&–çB#¢·Ð¢ÒÀ¢'F6´6ö×ÆWF–öç2#¢°¢&æÖR#¢'F6´6ö×ÆWF–öç2"À¢&6öÇVÖç2#¢°¢&–B#¢°¢&æÖR#¢&–B"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢G'VP¢ÒÀ¢'FVæçD–B#¢°¢&æÖR#¢'FVæçD–B"À¢'G—R#¢'f&6†"ƒ3"’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"wVW7F2r ¢ÒÀ¢&V–B#¢°¢&æÖR#¢&V–B"À¢'G—R#¢'f&6†"ƒb’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'F6µG—R#¢°¢&æÖR#¢'F6µG—R"À¢'G—R#¢&VçVÒ‚~j:>j
+Í	RrÂ~kën[hŽèibrÂ~˜Úžz^X¾y+®xk¾{™‚r’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'vVV´¶W’#¢°¢&æÖR#¢'vVV´¶W’"À¢'G—R#¢'f&6†"ƒ"’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&æ÷FR#¢°¢&æÖR#¢&æ÷FR"À¢'G—R#¢'f&6†"ƒ#Sb’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&7F÷"#¢°¢&æÖR#¢&7F÷""À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&7&VFVDB#¢°¢&æÖR#¢&7&VFVDB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢Ð¢ÒÀ¢&–æFW†W2#¢·ÒÀ¢&f÷&V–vä¶W—2#¢·ÒÀ¢&6ö×÷6—FU&–Ö'”¶W—2#¢°¢'F6´6ö×ÆWF–öç5ö–B#¢°¢&æÖR#¢'F6´6ö×ÆWF–öç5ö–B"À¢&6öÇVÖç2#¢°¢&–B ¢Ð¢Ð¢ÒÀ¢'Væ—VT6öç7G&–çG2#¢·ÒÀ¢&6†V6´6öç7G&–çB#¢·Ð¢ÒÀ¢'W6W'2#¢°¢&æÖR#¢'W6W'2"À¢&6öÇVÖç2#¢°¢&–B#¢°¢&æÖR#¢&–B"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢G'VP¢ÒÀ¢&÷Vä–B#¢°¢&æÖR#¢&÷Vä–B"À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&æÖR#¢°¢&æÖR#¢&æÖR"À¢'G—R#¢'FW‡B"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&VÖ–Â#¢°¢&æÖR#¢&VÖ–Â"À¢'G—R#¢'f&6†"ƒ3#’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&Æöv–äÖWF†öB#¢°¢&æÖR#¢&Æöv–äÖWF†öB"À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'&öÆR#¢°¢&æÖR#¢'&öÆR"À¢'G—R#¢&VçVÒ‚wW6W"rÂvFÖ–âr’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"wW6W"r ¢ÒÀ¢&7&VFVDB#¢°¢&æÖR#¢&7&VFVDB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢ÒÀ¢'WFFVDB#¢°¢&æÖR#¢'WFFVDB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&öåWFFR#¢G'VRÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢ÒÀ¢&Æ7E6–væVD–â#¢°¢&æÖR#¢&Æ7E6–væVD–â"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢Ð¢ÒÀ¢&–æFW†W2#¢·ÒÀ¢&f÷&V–vä¶W—2#¢·ÒÀ¢&6ö×÷6—FU&–Ö'”¶W—2#¢°¢'W6W'5ö–B#¢°¢&æÖR#¢'W6W'5ö–B"À¢&6öÇVÖç2#¢°¢&–B ¢Ð¢Ð¢ÒÀ¢'Væ—VT6öç7G&–çG2#¢°¢'W6W'5ö÷Vä–E÷Væ—VR#¢°¢&æÖR#¢'W6W'5ö÷Vä–E÷Væ—VR"À¢&6öÇVÖç2#¢°¢&÷Vä–B ¢Ð¢Ð¢ÒÀ¢&6†V6´6öç7G&–çB#¢·Ð¢ÒÀ¢'v÷&¶fÆ÷tFVg2#¢°¢&æÖR#¢'v÷&¶fÆ÷tFVg2"À¢&6öÇVÖç2#¢°¢&–B#¢°¢&æÖR#¢&–B"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢G'VP¢ÒÀ¢'FVæçD–B#¢°¢&æÖR#¢'FVæçD–B"À¢'G—R#¢'f&6†"ƒ3"’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"wVW7F2r ¢ÒÀ¢&FVd¶W’#¢°¢&æÖR#¢&FVd¶W’"À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&æÖR#¢°¢&æÖR#¢&æÖR"À¢'G—R#¢'f&6†"ƒ#‚’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&FV6—6–öåG—R#¢°¢&æÖR#¢&FV6—6–öåG—R"À¢'G—R#¢'f&6†"ƒ3"’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'7FW4§6öâ#¢°¢&æÖR#¢'7FW4§6öâ"À¢'G—R#¢'FW‡B"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&7F—fR#¢°¢&æÖR#¢&7F—fR"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢¢ÒÀ¢'fW'6–öâ#¢°¢&æÖR#¢'fW'6–öâ"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢¢ÒÀ¢&7&VFVDB#¢°¢&æÖR#¢&7&VFVDB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢Ð¢ÒÀ¢&–æFW†W2#¢·ÒÀ¢&f÷&V–vä¶W—2#¢·ÒÀ¢&6ö×÷6—FU&–Ö'”¶W—2#¢°¢'v÷&¶fÆ÷tFVg5ö–B#¢°¢&æÖR#¢'v÷&¶fÆ÷tFVg5ö–B"À¢&6öÇVÖç2#¢°¢&–B ¢Ð¢Ð¢ÒÀ¢'Væ—VT6öç7G&–çG2#¢°¢'v÷&¶fÆ÷tFVg5öFVd¶W•÷Væ—VR#¢°¢&æÖR#¢'v÷&¶fÆ÷tFVg5öFVd¶W•÷Væ—VR"À¢&6öÇVÖç2#¢°¢&FVd¶W’ ¢Ð¢Ð¢ÒÀ¢&6†V6´6öç7G&–çB#¢·Ð¢ÒÀ¢'v÷&¶fÆ÷t–ç7Fæ6W2#¢°¢&æÖR#¢'v÷&¶fÆ÷t–ç7Fæ6W2"À¢&6öÇVÖç2#¢°¢&–B#¢°¢&æÖR#¢&–B"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢G'VP¢ÒÀ¢'FVæçD–B#¢°¢&æÖR#¢'FVæçD–B"À¢'G—R#¢'f&6†"ƒ3"’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"wVW7F2r ¢ÒÀ¢&FVd¶W’#¢°¢&æÖR#¢&FVd¶W’"À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&FV6—6–öä–B#¢°¢&æÖR#¢&FV6—6–öä–B"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&V–B#¢°¢&æÖR#¢&V–B"À¢'G—R#¢'f&6†"ƒb’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'7FGW2#¢°¢&æÖR#¢'7FGW2"À¢'G—R#¢&VçVÒ‚w'Vææ–ærrÂvFöæRrÂvf–ÆVBrÂv6ö×Vç6FVBr’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"w'Vææ–ærr ¢ÒÀ¢&7W'&VçE7FW#¢°¢&æÖR#¢&7W'&VçE7FW"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢ ¢ÒÀ¢'7FW7FFW4§6öâ#¢°¢&æÖR#¢'7FW7FFW4§6öâ"À¢'G—R#¢'FW‡B"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'7F'FVD'’#¢°¢&æÖR#¢'7F'FVD'’"À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&7&VFVDB#¢°¢&æÖR#¢&7&VFVDB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢ÒÀ¢'WFFVDB#¢°¢&æÖR#¢'WFFVDB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&öåWFFR#¢G'VRÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢Ð¢ÒÀ¢&–æFW†W2#¢·ÒÀ¢&f÷&V–vä¶W—2#¢·ÒÀ¢&6ö×÷6—FU&–Ö'”¶W—2#¢°¢'v÷&¶fÆ÷t–ç7Fæ6W5ö–B#¢°¢&æÖR#¢'v÷&¶fÆ÷t–ç7Fæ6W5ö–B"À¢&6öÇVÖç2#¢°¢&–B ¢Ð¢Ð¢ÒÀ¢'Væ—VT6öç7G&–çG2#¢·ÒÀ¢&6†V6´6öç7G&–çB#¢·Ð¢ÒÀ¢'v÷&¶fÆ÷uF6·2#¢°¢&æÖR#¢'v÷&¶fÆ÷uF6·2"À¢&6öÇVÖç2#¢°¢&–B#¢°¢&æÖR#¢&–B"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢G'VP¢ÒÀ¢'FVæçD–B#¢°¢&æÖR#¢'FVæçD–B"À¢'G—R#¢'f&6†"ƒ3"’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"wVW7F2r ¢ÒÀ¢&–ç7Fæ6T–B#¢°¢&æÖR#¢&–ç7Fæ6T–B"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'7FW–æFW‚#¢°¢&æÖR#¢'7FW–æFW‚"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'F—FÆR#¢°¢&æÖR#¢'F—FÆR"À¢'G—R#¢'f&6†"ƒ#SR’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&76–væVR#¢°¢&æÖR#¢&76–væVR"À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢'7FGW2#¢°¢&æÖR#¢'7FGW2"À¢'G—R#¢&VçVÒ‚v÷VârÂvFöæRrÂvW66ÆFVBrÂv6æ6VÆÆVBr’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"v÷Vâr ¢ÒÀ¢'6Æ†÷W'2#¢°¢&æÖR#¢'6Æ†÷W'2"À¢'G—R#¢&–çB"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢s ¢ÒÀ¢&GVTB#¢°¢&æÖR#¢&GVTB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&W66ÆFVEFò#¢°¢&æÖR#¢&W66ÆFVEFò"À¢'G—R#¢'f&6†"ƒcB’"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&FöæTB#¢°¢&æÖR#¢&FöæTB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢fÇ6RÀ¢&WFö–æ7&VÖVçB#¢fÇ6P¢ÒÀ¢&7&VFVDB#¢°¢&æÖR#¢&7&VFVDB"À¢'G—R#¢'F–ÖW7F×"À¢'&–Ö'”¶W’#¢fÇ6RÀ¢&æ÷DçVÆÂ#¢G'VRÀ¢&WFö–æ7&VÖVçB#¢fÇ6RÀ¢&FVfVÇB#¢"†æ÷r‚’’ ¢Ð¢ÒÀ¢&–æFW†W2#¢·ÒÀ¢&f÷&V–vä¶W—2#¢·ÒÀ¢&6ö×÷6—FU&–Ö'”¶W—2#¢°¢'v÷&¶fÆ÷uF6·5ö–B#¢°¢&æÖR#¢'v÷&¶fÆ÷uF6·5ö–B"À¢&6öÇVÖç2#¢°¢&–B ¢Ð¢Ð¢ÒÀ¢'Væ—VT6öç7G&–çG2#¢·ÒÀ¢&6†V6´6öç7G&–çB#¢·Ð¢Ð¢ÒÀ¢'f–Ww2#¢·ÒÀ¢%öÖWF#¢°¢'66†VÖ2#¢·ÒÀ¢'F&ÆW2#¢·ÒÀ¢&6öÇVÖç2#¢·Ð¢ÒÀ¢&–çFW&æÂ#¢°¢'F&ÆW2#¢·ÒÀ¢&–æFW†W2#¢·Ð¢Ð§Ð
